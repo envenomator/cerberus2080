@@ -11,7 +11,7 @@ SRC_DIRS	:= ./src
 AS_BINARY	:= ca65
 LNK_BINARY	:= cl65
 HEXDUMP		:= xxd -c8 -g1 -o $(STARTADDRESS)
-SEND_SCRIPT	:= send.py
+SEND_SCRIPT	:= ../tools/send.py
 ASFLAGS		:=
 SRCS		:= $(shell find $(SRC_DIRS) -name '*.s')
 OBJS		:= $(subst $(SRC_DIRS),$(BUILD_DIR),$(patsubst %.s,%.o,$(SRCS)))
@@ -30,8 +30,8 @@ $(BUILD_DIR)/%.o: $(SRC_DIRS)/%.s
 all: $(BUILD_DIR)/$(TARGET_BIN) upload
 
 # send to serial interface
-upload:
-	$(SEND_SCRIPT) $(TARGET_BIN) $(SERIALPORT)
+upload: $(BUILD_DIR)/$(TARGET_BIN)
+	$(SEND_SCRIPT) $(BUILD_DIR)/$(TARGET_BIN) $(SERIALPORT)
 
 hexdump: $(BUILD_DIR)/$(TARGET_BIN)
 	$(HEXDUMP) $(BUILD_DIR)/$(TARGET_BIN)
