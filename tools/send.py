@@ -12,7 +12,7 @@ import os.path
 ## START ADDRESS defaults to 0x0205
 
 if len(sys.argv) == 1:
-  sys.exit('Error: no filename given to send')
+  sys.exit('Usage: send.py FILENAME <SERIAL_PORT> <START_ADDRESS>')
 
 if not os.path.isfile(sys.argv[1]):
   sys.exit(f'Error: file \'{sys.argv[1]}\' not found')
