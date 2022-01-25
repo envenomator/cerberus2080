@@ -45,6 +45,7 @@ try:
     blockIndex = 0
     blockBytesRemaining = len(content)
     while (blockBytesRemaining > 0) and (not checkError):
+      print(f'{(blockIndex/len(content))*100:3.0f}% - {blockIndex:6d} of {len(content):6d} - ', end="")
       blockSize = min(blockBytesRemaining, blockSize)
       header = f'0x{(startAddress + blockIndex):04x}'
       print(header, end="")
