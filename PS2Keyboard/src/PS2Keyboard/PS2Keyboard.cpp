@@ -523,10 +523,13 @@ static char get_iso8859_code(void)
 			} else if ((state & ALTGR) && keymap->uses_altgr) {
 				if (s < PS2_KEYMAP_SIZE)
 					c = pgm_read_byte(keymap->altgr + s);
-			} else if (state & (SHIFT_L | SHIFT_R | CAPSLOCK)) {
+			} else if (state & (SHIFT_L | SHIFT_R)) {
 				if (s < PS2_KEYMAP_SIZE)
 					c = pgm_read_byte(keymap->shift + s);
-			} else {
+			} else if (state & CAPSLOCK){
+        if (s < PS2_KEYMAP_SIZE)
+          c = toupper(pgm_read_byte(keymap->noshift + s));
+      } else {
 				if (s < PS2_KEYMAP_SIZE)
 					c = pgm_read_byte(keymap->noshift + s);
 			}
