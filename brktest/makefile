@@ -1,5 +1,5 @@
 # project config
-PROJECTNAME	:= test
+PROJECTNAME	:= brktest
 STARTADDRESS:= 0x0205
 LINKCONFIG	:= cerberus.cfg
 SERIALPORT	:= /dev/ttyUSB0
@@ -19,12 +19,12 @@ OBJS		:= $(subst $(SRC_DIRS),$(BUILD_DIR),$(patsubst %.s,%.o,$(SRCS)))
 # Default make target - build to binary file
 # Link all objects
 $(BUILD_DIR)/$(TARGET_BIN): $(OBJS)
-	$(LNK_BINARY) $(OBJS) -vm -m $(BUILD_DIR)/$(PROJECTNAME).map -C $(LINKCONFIG) -o $@
+	$(LNK_BINARY) $(OBJS) -C $(LINKCONFIG) -o $@
 
 # Build step for assembly source - assemble each file to an object
 $(BUILD_DIR)/%.o: $(SRC_DIRS)/%.s
 	@mkdir -p $(BUILD_DIR)
-	$(AS_BINARY) $(ASFLAGS) -l $(BUILD_DIR)/$(basename $(notdir $<)).lst $< -o $@
+	$(AS_BINARY) $(ASFLAGS) $< -o $@
 
 # Build target and upload immediately
 all: $(BUILD_DIR)/$(TARGET_BIN) upload

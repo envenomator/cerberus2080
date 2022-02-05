@@ -1,5 +1,5 @@
 # project config
-PROJECTNAME	:= test
+PROJECTNAME	:= console
 STARTADDRESS:= 0x0205
 LINKCONFIG	:= cerberus.cfg
 SERIALPORT	:= /dev/ttyUSB0
