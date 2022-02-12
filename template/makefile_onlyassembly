@@ -1,5 +1,5 @@
 # project config
-PROJECTNAME	:= console
+PROJECTNAME	:= test
 STARTADDRESS:= 0x0205
 LINKCONFIG	:= cerberus.cfg
 SERIALPORT	:= /dev/ttyUSB0
@@ -8,10 +8,12 @@ SERIALPORT	:= /dev/ttyUSB0
 TARGET_BIN	:= $(PROJECTNAME).bin
 BUILD_DIR	:= ./build
 SRC_DIRS	:= ./src
+CP_BINARY   := cc65
 AS_BINARY	:= ca65
 LNK_BINARY	:= cl65
 HEXDUMP		:= xxd -c8 -g1 -o $(STARTADDRESS)
 SEND_SCRIPT	:= ../tools/send.py
+CPFLAGS		:= -t none -O --cpu 65c02
 ASFLAGS		:=
 SRCS		:= $(shell find $(SRC_DIRS) -name '*.s')
 OBJS		:= $(subst $(SRC_DIRS),$(BUILD_DIR),$(patsubst %.s,%.o,$(SRCS)))
@@ -26,6 +28,10 @@ $(BUILD_DIR)/%.o: $(SRC_DIRS)/%.s
 	@mkdir -p $(BUILD_DIR)
 	$(AS_BINARY) $(ASFLAGS) -l $(BUILD_DIR)/$(basename $(notdir $<)).lst $< -o $@
 
+# Build step for C source - compile to assembly first
+$(BUILD_DIR)/%.s: $(SRC_DIRS)/%.c
+	@mkdir -p $(BUILD_DIR)
+	$(CP_BINARY) $(CPFLAGS) $@
 # Build target and upload immediately
 all: $(BUILD_DIR)/$(TARGET_BIN) upload
 

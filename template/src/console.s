@@ -5,50 +5,30 @@ SCREENWIDTH  = 40
 SCREENHEIGHT = 30
 
     .exportzp xpos,ypos,conptr
+    .export  _con_putc, _con_puts, _con_getc
+    .export  _con_init, _con_cls, _con_gotoxy
+    .globalzp sp
+    .import popa,popax,incsp2,decsp2
 
     .zeropage
-;xpos     = $04
-;ypos     = $05
-;conptr   = $06
-;strptr   = $08
 xpos:    .res 1
 ypos:    .res 1
 conptr:  .res 2
 strptr:  .res 2
 
     .code
-    
-main:
-    ; init stack
-    ldx #$ff
-    txs
+   
+.proc _con_puts: near
+    ; C __fastcall__ A/X ptr to print
+    sta strptr
+    stx strptr+1
+    jsr con_print
+    rts
+.endproc
 
-    ; console init
-    jsr con_init
-
-    ; print string
-
-    lda #'x'
-    jsr con_printchar
-    ldy #0
-    ldx #39
-    jsr con_gotoxy
-    jsr con_printchar
-    ldy #29
-    jsr con_gotoxy
-    jsr con_printchar
-    ldx #0
-    jsr con_gotoxy
-    jsr con_printchar
-    ldx #19
-    ldy #14
-    jsr con_gotoxy
-    jsr con_printchar
-
-end:
-    jmp end
-
-con_init:
+.proc _con_init: near
+_con_init:
+    ; C COMPLIANT
     ; initializes the console variables
     ; reset to X,Y = 0,0
     pha
@@ -64,14 +44,17 @@ con_init:
     plx
     pla
     rts
+.endproc
 
-con_cls:
+.proc _con_cls: near
+_con_cls:
+    ; C COMPLIANT
     ; Fill the entire screen with empty tile (space)
     ; and reset console to 0,0
     pha
     phx
     phy
-    jsr con_init
+    jsr _con_init
 
     ldx #$0
 @outer:
@@ -95,24 +78,46 @@ con_cls:
     cpx #SCREENHEIGHT
     bne @outer
     
-    jsr con_init
+    jsr _con_init
     ply
     plx
     pla
     rts
+.endproc
+
+.proc _con_gotoxy
+    ; C compliant code
+    pha         ; Y argument
+    ldy #0
+    lda (sp),y  ; X argument from the stack - unsigned char
+    tax         ; X argument in register x
+    ply
+    jsr con_gotoxy
+    jsr popa    ; stack cleanup
+    rts
+.endproc
+
+.proc _con_putc
+    ; C compliant code - fastcalled
+    ; A register contains character to put
+    jsr con_printchar
+    rts
+.endproc
 
 con_gotox:
+    ; Assembly only call
     pha
     phx
     phy
     ldy ypos
-    jsr con_gotoxy
+    jsr _con_gotoxy
     ply
     plx
     pla
     rts
 
 con_gotoxy:
+    ; Assembly only call
     ; input .x == x position
     ; input .y == y position
     pha
@@ -158,7 +163,18 @@ con_gotoxy:
     pla
     rts
 
+_con_getc:
+    ; C COMPLIANT
+    lda $0200           ; mail flag
+    cmp #$01            ; character received?
+    bne _con_getc       ; blocked wait for character
+    stz $0200  ; acknowledge receive
+    lda $0201  ; receive the character from the mailbox slot
+    ldx #$0    ; 16-bit promotion of high-byte as return value to C
+    rts
+
 con_print:
+    ; Assembly only call
     ; prints zero-terminated string pointed to by strptr in zeropage
     pha
     phx
@@ -178,6 +194,7 @@ con_print:
     rts
 
 con_printchar:
+    ; Assembly only call
     ; prints character from A to the current X,Y coordinate in zeropage
     ; X,Y is always a previously checked valid coordinate
     pha
@@ -219,7 +236,7 @@ con_printchar:
     cmp #SCREENHEIGHT-1
     bne @nextrow
     ; return to 0,0
-    jsr con_init
+    jsr _con_init
     bra @done
 @nextrow:
     inc ypos
@@ -238,13 +255,3 @@ con_printchar:
     plx
     pla
     rts
-
-    .data
-hello:
-    ;.asciiz "Hello world!, dit is een voorbeeld van een string die duidelijk te lang is voor een 40-character display. Ik ben benieuwd hoeveel regels dit in beslag gaat nemen op het nieuwe scherm. We zullen zien."
-    ;.byte "Hello world!", $0d, $0d, "Test",0
-    ;.byte "0",$0d,"40",$0d,"80",$0d,"120",$0d,"160",$0d,"200",$0d,"01234567890123456",$0d,"Test",0
-    ;.byte "0",$0d,"40",$0d,"80",$0d,"120",$0d,"160",$0d,"200",$0d,"012345678901234567890",$0d,"Test",0
-    .asciiz "Hello world!"
-crlf:
-    .byte $0d,0
