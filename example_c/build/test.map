@@ -1,0 +1,333 @@
+Modules list:
+-------------
+console.o:
+    CODE              Offs=000000  Size=000110  Align=00001  Fill=0000
+    RODATA            Offs=000000  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000000  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000000  Size=000006  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+main.o:
+    CODE              Offs=000110  Size=0000B5  Align=00001  Fill=0000
+    RODATA            Offs=000000  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000000  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+banner.o:
+    CODE              Offs=0001C5  Size=000007  Align=00001  Fill=0000
+    RODATA            Offs=000000  Size=000016  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000000  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+./lib/none.lib(addeqsp.o):
+    CODE              Offs=0001CC  Size=000011  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000000  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+./lib/none.lib(condes.o):
+    CODE              Offs=0001DD  Size=00000C  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000000  Size=000025  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+    ONCE              Offs=000000  Size=00000C  Align=00001  Fill=0000
+./lib/none.lib(copydata.o):
+    CODE              Offs=0001E9  Size=00002D  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000025  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+./lib/none.lib(crt0.o):
+    CODE              Offs=000216  Size=000000  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000025  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+    STARTUP           Offs=000000  Size=00001C  Align=00001  Fill=0000
+./lib/none.lib(decsp3.o):
+    CODE              Offs=000216  Size=00000D  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000025  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+./lib/none.lib(ldaxsp.o):
+    CODE              Offs=000223  Size=000009  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000025  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+./lib/none.lib(popa.o):
+    CODE              Offs=00022C  Size=00000C  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000025  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+./lib/none.lib(pusha.o):
+    CODE              Offs=000238  Size=000016  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000025  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+./lib/none.lib(staxsp.o):
+    CODE              Offs=00024E  Size=00000B  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000025  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+./lib/none.lib(zerobss.o):
+    CODE              Offs=000259  Size=000023  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000025  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=000000  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+./lib/none.lib(zeropage.o):
+    CODE              Offs=00027C  Size=000000  Align=00001  Fill=0000
+    RODATA            Offs=000016  Size=000000  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000000  Align=00001  Fill=0000
+    DATA              Offs=000025  Size=000000  Align=00001  Fill=0000
+    ZEROPAGE          Offs=000006  Size=00001A  Align=00001  Fill=0000
+    NULL              Offs=000000  Size=000000  Align=00001  Fill=0000
+
+
+Segment list:
+-------------
+Name                   Start     End    Size  Align
+----------------------------------------------------
+NULL                  000000  000000  000000  00001
+ZEROPAGE              000000  00001F  000020  00001
+STARTUP               000205  000220  00001C  00001
+ONCE                  000221  00022C  00000C  00001
+CODE                  00022D  0004A8  00027C  00001
+RODATA                0004A9  0004BE  000016  00001
+DATA                  0004BF  0004E3  000025  00001
+BSS                   0004E4  0004E4  000000  00001
+
+
+Exports list by name:
+---------------------
+__BSS_LOAD__              0004E4  LA    __BSS_RUN__               0004E4 RLA    
+__BSS_SIZE__              000000 REA    __CODE_LOAD__             00022D  LA    
+__CODE_RUN__              00022D  LA    __CODE_SIZE__             00027C  EA    
+__CONSTRUCTOR_COUNT__     000000 REA    __CONSTRUCTOR_TABLE__     00022D RLA    
+__DATA_LOAD__             0004BF RLA    __DATA_RUN__              0004BF RLA    
+__DATA_SIZE__             000025 REA    __DESTRUCTOR_COUNT__      000000 REA    
+__DESTRUCTOR_TABLE__      0004BF RLA    __ONCE_LOAD__             000221  LA    
+__ONCE_RUN__              000221  LA    __ONCE_SIZE__             00000C  EA    
+__RAM_FILEOFFS__          000000  EA    __RAM_LAST__              0004E4  LA    
+__RAM_SIZE__              0075FB REA    __RAM_START__             000205 RLA    
+__RODATA_LOAD__           0004A9  LA    __RODATA_RUN__            0004A9  LA    
+__RODATA_SIZE__           000016  EA    __STACKSIZE__             000800 REA    
+__STACKSTART__            008000 REA    __STARTUP_LOAD__          000205  LA    
+__STARTUP_RUN__           000205  LA    __STARTUP_SIZE__          00001C  EA    
+__STARTUP__               000001 REA    __ZEROPAGE_LOAD__         000000  LA    
+__ZEROPAGE_RUN__          000000  LA    __ZEROPAGE_SIZE__         000020  EA    
+__ZPSTART__               000000 REA    __ZP_FILEOFFS__           000000  EA    
+__ZP_LAST__               000020  LA    __ZP_SIZE__               000040  EA    
+__ZP_START__              000000  LA    _banner                   0003F2 RLA    
+_con_cls                  000248 RLA    _con_getc                 0002CA RLA    
+_con_gotoxy               000276 RLA    _con_init                 000235 RLA    
+_con_putc                 000284 RLA    _con_puts                 00022D RLA    
+_exit                     00021D  LA    _init                     000205  LA    
+_main                     00033D RLA    addeq0sp                  0003F9  LA    
+addeqysp                  0003FB RLA    condes                    0004BF  LA    
+conptr                    000002  LZ    copydata                  000416 RLA    
+decsp3                    000443 RLA    donelib                   00040A RLA    
+initlib                   000221 RLA    ldax0sp                   000450  LA    
+ldaxysp                   000452 RLA    popa                      000459 RLA    
+ptr1                      00000E RLZ    ptr2                      000010 RLZ    
+ptr3                      000012  LZ    ptr4                      000014  LZ    
+pusha                     000469 RLA    pusha0sp                  000465  LA    
+pushaysp                  000467  LA    regbank                   00001A  LZ    
+regsave                   00000A  LZ    sp                        000006 RLZ    
+sreg                      000008  LZ    stax0sp                   00047B  LA    
+staxysp                   00047D RLA    tmp1                      000016 RLZ    
+tmp2                      000017  LZ    tmp3                      000018  LZ    
+tmp4                      000019  LZ    xpos                      000000  LZ    
+ypos                      000001  LZ    zerobss                   000486 RLA    
+
+
+
+Exports list by value:
+----------------------
+__BSS_SIZE__              000000 REA    __CONSTRUCTOR_COUNT__     000000 REA    
+__DESTRUCTOR_COUNT__      000000 REA    __RAM_FILEOFFS__          000000  EA    
+__ZEROPAGE_LOAD__         000000  LA    __ZEROPAGE_RUN__          000000  LA    
+__ZPSTART__               000000 REA    __ZP_FILEOFFS__           000000  EA    
+__ZP_START__              000000  LA    xpos                      000000  LZ    
+__STARTUP__               000001 REA    ypos                      000001  LZ    
+conptr                    000002  LZ    sp                        000006 RLZ    
+sreg                      000008  LZ    regsave                   00000A  LZ    
+__ONCE_SIZE__             00000C  EA    ptr1                      00000E RLZ    
+ptr2                      000010 RLZ    ptr3                      000012  LZ    
+ptr4                      000014  LZ    __RODATA_SIZE__           000016  EA    
+tmp1                      000016 RLZ    tmp2                      000017  LZ    
+tmp3                      000018  LZ    tmp4                      000019  LZ    
+regbank                   00001A  LZ    __STARTUP_SIZE__          00001C  EA    
+__ZEROPAGE_SIZE__         000020  EA    __ZP_LAST__               000020  LA    
+__DATA_SIZE__             000025 REA    __ZP_SIZE__               000040  EA    
+__RAM_START__             000205 RLA    __STARTUP_LOAD__          000205  LA    
+__STARTUP_RUN__           000205  LA    _init                     000205  LA    
+_exit                     00021D  LA    __ONCE_LOAD__             000221  LA    
+__ONCE_RUN__              000221  LA    initlib                   000221 RLA    
+__CODE_LOAD__             00022D  LA    __CODE_RUN__              00022D  LA    
+__CONSTRUCTOR_TABLE__     00022D RLA    _con_puts                 00022D RLA    
+_con_init                 000235 RLA    _con_cls                  000248 RLA    
+_con_gotoxy               000276 RLA    __CODE_SIZE__             00027C  EA    
+_con_putc                 000284 RLA    _con_getc                 0002CA RLA    
+_main                     00033D RLA    _banner                   0003F2 RLA    
+addeq0sp                  0003F9  LA    addeqysp                  0003FB RLA    
+donelib                   00040A RLA    copydata                  000416 RLA    
+decsp3                    000443 RLA    ldax0sp                   000450  LA    
+ldaxysp                   000452 RLA    popa                      000459 RLA    
+pusha0sp                  000465  LA    pushaysp                  000467  LA    
+pusha                     000469 RLA    stax0sp                   00047B  LA    
+staxysp                   00047D RLA    zerobss                   000486 RLA    
+__RODATA_LOAD__           0004A9  LA    __RODATA_RUN__            0004A9  LA    
+__DATA_LOAD__             0004BF RLA    __DATA_RUN__              0004BF RLA    
+__DESTRUCTOR_TABLE__      0004BF RLA    condes                    0004BF  LA    
+__BSS_LOAD__              0004E4  LA    __BSS_RUN__               0004E4 RLA    
+__RAM_LAST__              0004E4  LA    __STACKSIZE__             000800 REA    
+__RAM_SIZE__              0075FB REA    __STACKSTART__            008000 REA    
+
+
+
+Imports list:
+-------------
+__BSS_LOAD__ ([linker generated]):
+__BSS_RUN__ ([linker generated]):
+    zerobss.o                 common/zerobss.s:8
+__BSS_SIZE__ ([linker generated]):
+    zerobss.o                 common/zerobss.s:8
+__CODE_LOAD__ ([linker generated]):
+__CODE_RUN__ ([linker generated]):
+__CODE_SIZE__ ([linker generated]):
+__CONSTRUCTOR_COUNT__ ([linker generated]):
+    condes.o                  runtime/condes.s:18
+__CONSTRUCTOR_TABLE__ ([linker generated]):
+    condes.o                  runtime/condes.s:18
+__DATA_LOAD__ ([linker generated]):
+    copydata.o                common/copydata.s:8
+__DATA_RUN__ ([linker generated]):
+    copydata.o                common/copydata.s:8
+__DATA_SIZE__ ([linker generated]):
+    copydata.o                common/copydata.s:8
+__DESTRUCTOR_COUNT__ ([linker generated]):
+    condes.o                  runtime/condes.s:19
+__DESTRUCTOR_TABLE__ ([linker generated]):
+    condes.o                  runtime/condes.s:19
+__ONCE_LOAD__ ([linker generated]):
+__ONCE_RUN__ ([linker generated]):
+__ONCE_SIZE__ ([linker generated]):
+__RAM_FILEOFFS__ ([linker generated]):
+__RAM_LAST__ ([linker generated]):
+__RAM_SIZE__ ([linker generated]):
+    crt0.o                    crt0.s:11
+__RAM_START__ ([linker generated]):
+    crt0.o                    crt0.s:11
+__RODATA_LOAD__ ([linker generated]):
+__RODATA_RUN__ ([linker generated]):
+__RODATA_SIZE__ ([linker generated]):
+__STACKSIZE__ ([linker generated]):
+    [linker generated]        cerberus.cfg:11
+__STACKSTART__ ([linker generated]):
+    [linker generated]        cerberus.cfg:11
+__STARTUP_LOAD__ ([linker generated]):
+__STARTUP_RUN__ ([linker generated]):
+__STARTUP_SIZE__ ([linker generated]):
+__STARTUP__ (crt0.o):
+    main.o                    src/main.s:13
+__ZEROPAGE_LOAD__ ([linker generated]):
+__ZEROPAGE_RUN__ ([linker generated]):
+__ZEROPAGE_SIZE__ ([linker generated]):
+__ZPSTART__ ([linker generated]):
+    [linker generated]        cerberus.cfg:10
+__ZP_FILEOFFS__ ([linker generated]):
+__ZP_LAST__ ([linker generated]):
+__ZP_SIZE__ ([linker generated]):
+__ZP_START__ ([linker generated]):
+_banner (banner.o):
+    main.o                    src/main.s:19
+_con_cls (console.o):
+    main.o                    src/main.s:15
+_con_getc (console.o):
+    main.o                    src/main.s:18
+_con_gotoxy (console.o):
+    main.o                    src/main.s:17
+_con_init (console.o):
+    main.o                    src/main.s:14
+_con_putc (console.o):
+    main.o                    src/main.s:16
+_con_puts (console.o):
+    banner.o                  src/banner.s:13
+_exit (crt0.o):
+_init (crt0.o):
+_main (main.o):
+    crt0.o                    crt0.s:8
+addeq0sp (addeqsp.o):
+addeqysp (addeqsp.o):
+    main.o                    src/main.s:117
+condes (condes.o):
+conptr (console.o):
+copydata (copydata.o):
+    crt0.o                    crt0.s:13
+decsp3 (decsp3.o):
+    main.o                    src/main.s:117
+donelib (condes.o):
+    crt0.o                    crt0.s:13
+initlib (condes.o):
+    crt0.o                    crt0.s:13
+ldax0sp (ldaxsp.o):
+ldaxysp (ldaxsp.o):
+    main.o                    src/main.s:117
+popa (popa.o):
+    console.o                 src/console.s:11
+ptr1 (zeropage.o):
+    copydata.o                common/copydata.s:9
+    zerobss.o                 common/zerobss.s:9
+ptr2 (zeropage.o):
+    copydata.o                common/copydata.s:9
+ptr3 (zeropage.o):
+ptr4 (zeropage.o):
+pusha (pusha.o):
+    main.o                    src/main.s:117
+pusha0sp (pusha.o):
+pushaysp (pusha.o):
+regbank (zeropage.o):
+regsave (zeropage.o):
+sp (zeropage.o):
+    staxsp.o                  runtime/staxsp.s:8
+    pusha.o                   runtime/pusha.s:8
+    popa.o                    runtime/popa.s:8
+    ldaxsp.o                  runtime/ldaxsp.s:8
+    decsp3.o                  runtime/decsp3.s:8
+    crt0.o                    /home/jeroen/Documents/source/cc65/asminc/zeropage.inc:11
+    addeqsp.o                 runtime/addeqsp.s:8
+    main.o                    src/main.s:10
+    console.o                 src/console.s:10
+sreg (zeropage.o):
+stax0sp (staxsp.o):
+staxysp (staxsp.o):
+    main.o                    src/main.s:117
+tmp1 (zeropage.o):
+    copydata.o                common/copydata.s:9
+tmp2 (zeropage.o):
+tmp3 (zeropage.o):
+tmp4 (zeropage.o):
+xpos (console.o):
+ypos (console.o):
+zerobss (zerobss.o):
+    crt0.o                    crt0.s:13
+

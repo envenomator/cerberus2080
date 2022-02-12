@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "console.h"
 
+extern void banner();
+
 int main()
 {
     int n;
@@ -10,8 +12,8 @@ int main()
     con_init();
     con_cls();
 
-    con_gotoxy(12,10);
-    con_puts("Hello world!");
+    con_gotoxy(9,10);
+    banner();
     for(n = 0; n < 40; n++)
     {
         con_gotoxy(n,0);
