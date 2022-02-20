@@ -50,5 +50,9 @@ _init:    LDX     #$FF                 ; Initialize stack pointer to $01FF
 ; Back from main (this is also the _exit entry):  force a software break
 
 _exit:    JSR     donelib              ; Run destructors
+exitloop:
+          lda #$7F                      ; BIOS request to reset
+          sta $202                      ; INBOX_FLAG
+          jmp exitloop
           BRK
 
