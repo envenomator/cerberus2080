@@ -31,7 +31,7 @@ all:
 	# Finally, convert ihx to binary
 	sdobjcopy -I ihex -O binary test.ihx test.bin
 
-upload: test.bin
+upload: all
 	$(SEND_SCRIPT) test.bin $(SERIALPORT)
 
 .PHONY: clean
