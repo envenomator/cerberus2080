@@ -1,0 +1,13 @@
+-mjwx
+-i test.ihx
+-y
+-b _CODE = 0x0205
+-b _DATA = 0x0300
+-y
+-k libsdcc-z80
+-l libsdcc-z80
+crt0.rel
+test.rel
+console.rel
+
+-e

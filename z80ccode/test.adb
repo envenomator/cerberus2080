@@ -1,0 +1,9 @@
+M:test
+F:G$main$0_0$0({2}DF,SI:S),C,0,0,0,0,0
+S:Ltest.main$welcome$1_0$4({2}DG,SC:U),R,0,0,[]
+S:G$con_init$0_0$0({2}DF,SV:S),C,0,0
+S:G$con_gotoxy$0_0$0({2}DF,SV:S),C,0,0
+S:G$con_cls$0_0$0({2}DF,SV:S),C,0,0
+S:G$putc$0_0$0({2}DF,SV:S),C,0,0
+S:G$puts$0_0$0({2}DF,SV:S),C,0,0
+S:G$main$0_0$0({2}DF,SI:S),C,0,0

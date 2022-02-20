@@ -1,0 +1,274 @@
+ASxxxx Linker V03.00 + NoICE + sdld,  page 1.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+.  .ABS.                            00000000    00000000 =           0. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000000  .__.ABS.                           console
+     00000000  l__CABS                         
+     00000000  l__DABS                         
+     00000000  l__HEAP                         
+     00000000  l__HOME                         
+     00000000  l__INITFINAL                    
+     00000000  l__INITIALIZED                  
+     00000000  l__INITIALIZER                  
+     00000000  s__CABS                         
+     00000000  s__DABS                         
+     00000001  l__GSFINAL                      
+     00000002  l__DATA                         
+     0000000F  l__GSINIT                       
+     000000ED  l__CODE                         
+     00000205  s__CODE                         
+     000002F2  s__GSINIT                       
+     00000300  s__DATA                         
+     00000301  s__GSFINAL                      
+     00000302  s__BSS                          
+     00000302  s__HOME                         
+     00000302  s__INITFINAL                    
+     00000302  s__INITIALIZED                  
+     00000302  s__INITIALIZER                  
+     00000802  l__BSS                          
+     00000B04  s__HEAP                         
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000205    000000ED =         237. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000233  A$test$62                          test
+     00000233  C$test.c$3$0_0$4                   test
+     00000233  C$test.c$5$2_0$4                   test
+     00000233  C$test.c$8$1_0$4                   test
+     00000233  G$main$0$0                         test
+     00000233  _main                              test
+     00000236  A$test$66                          test
+     00000236  C$test.c$9$1_0$4                   test
+     00000239  A$test$67                          test
+     0000023A  A$test$68                          test
+     0000023D  A$test$72                          test
+     0000023D  C$test.c$10$1_0$4                  test
+     00000240  A$test$73                          test
+     00000241  A$test$74                          test
+     00000244  A$test$75                          test
+     00000245  A$test$79                          test
+     00000245  C$test.c$11$1_0$4                  test
+     00000248  A$test$91                          test
+     00000248  C$test.c$12$1_0$4                  test
+     00000248  C$test.c$13$1_0$4                  test
+     00000248  XG$main$0$0                        test
+     0000024A  Ftest$__str_0$0_0$0                test
+     00000257  A$console$63                       console
+     00000257  C$console.c$5$0_0$4                console
+     00000257  C$console.c$7$1_0$4                console
+     00000257  G$con_init$0$0                     console
+     00000257  _con_init                          console
+     0000025A  A$console$64                       console
+     0000025D  A$console$75                       console
+     0000025D  C$console.c$8$1_0$4                console
+     0000025D  C$console.c$9$1_0$4                console
+     0000025D  XG$con_init$0$0                    console
+     0000025E  A$console$88                       console
+     0000025E  C$console.c$11$1_0$6               console
+     0000025E  C$console.c$13$1_0$6               console
+     0000025E  G$con_gotoxy$0$0                   console
+     0000025E  _con_gotoxy                        console
+     00000261  A$console$89                       console
+     00000262  A$console$90                       console
+     00000263  A$console$91                       console
+     00000265  A$console$92                       console
+     00000266  A$console$93                       console
+     00000267  A$console$94                       console
+     00000268  A$console$95                       console
+     00000269  A$console$96                       console
+     0000026A  A$console$97                       console
+     0000026B  A$console$98                       console
+     0000026C  A$console$99                       console
+     0000026D  A$console$100                      console
+     0000026E  A$console$101                      console
+ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000205    000000ED =         237. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000026F  A$console$102                      console
+     00000271  A$console$103                      console
+     00000272  A$console$104                      console
+     00000273  A$console$105                      console
+     00000276  A$console$106                      console
+     00000277  A$console$107                      console
+     0000027B  A$console$108                      console
+     0000027C  A$console$109                      console
+     0000027F  A$console$110                      console
+     00000280  A$console$111                      console
+     00000282  A$console$112                      console
+     00000284  A$console$113                      console
+     00000287  A$console$124                      console
+     00000287  C$console.c$14$1_0$6               console
+     00000287  C$console.c$15$1_0$6               console
+     00000287  XG$con_gotoxy$0$0                  console
+     00000288  A$console$137                      console
+     00000288  C$console.c$17$1_0$7               console
+     00000288  G$con_cls$0$0                      console
+     00000288  _con_cls                           console
+     0000028B  A$console$138                      console
+     0000028E  A$console$140                      console
+     00000292  A$console$141                      console
+     00000295  A$console$142                      console
+     00000297  A$console$143                      console
+     0000029A  A$console$144                      console
+     0000029C  A$console$145                      console
+     0000029E  A$console$149                      console
+     0000029E  C$console.c$21$3_0$9               console
+     000002A1  A$console$150                      console
+     000002A3  A$console$154                      console
+     000002A3  C$console.c$19$2_0$8               console
+     000002A6  A$console$155                      console
+     000002A8  A$console$156                      console
+     000002AB  A$console$157                      console
+     000002AD  A$console$162                      console
+     000002AD  C$console.c$23$1_0$7               console
+     000002B0  A$console$163                      console
+     000002B3  A$console$174                      console
+     000002B3  C$console.c$24$1_0$7               console
+     000002B3  C$console.c$25$1_0$7               console
+     000002B3  XG$con_cls$0$0                     console
+     000002B4  A$console$187                      console
+     000002B4  C$console.c$26$1_0$11              console
+     000002B4  C$console.c$28$1_0$11              console
+     000002B4  G$putc$0$0                         console
+     000002B4  _putc                              console
+     000002B7  A$console$188                      console
+     000002BB  A$console$189                      console
+     000002BD  A$console$190                      console
+     000002C0  A$console$191                      console
+ASxxxx Linker V03.00 + NoICE + sdld,  page 4.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000205    000000ED =         237. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000002C1  A$console$195                      console
+     000002C1  C$console.c$29$1_0$11              console
+     000002C5  A$console$196                      console
+     000002C8  A$console$197                      console
+     000002CA  A$console$198                      console
+     000002CD  A$console$203                      console
+     000002CD  C$console.c$30$1_0$11              console
+     000002D0  A$console$204                      console
+     000002D2  A$console$205                      console
+     000002D3  A$console$206                      console
+     000002D6  A$console$207                      console
+     000002D8  A$console$208                      console
+     000002D9  A$console$212                      console
+     000002D9  C$console.c$31$1_0$11              console
+     000002DC  A$console$213                      console
+     000002DF  A$console$224                      console
+     000002DF  C$console.c$32$1_0$11              console
+     000002DF  C$console.c$33$1_0$11              console
+     000002DF  XG$putc$0$0                        console
+     000002E0  A$console$237                      console
+     000002E0  C$console.c$35$1_0$13              console
+     000002E0  C$console.c$37$1_0$13              console
+     000002E0  G$puts$0$0                         console
+     000002E0  _puts                              console
+     000002E1  A$console$238                      console
+     000002E2  A$console$239                      console
+     000002E3  A$console$240                      console
+     000002E4  A$console$242                      console
+     000002E5  A$console$243                      console
+     000002E6  A$console$244                      console
+     000002E7  A$console$248                      console
+     000002E7  C$console.c$39$2_0$14              console
+     000002E8  A$console$249                      console
+     000002E9  A$console$250                      console
+     000002EA  A$console$251                      console
+     000002ED  A$console$252                      console
+     000002EE  A$console$253                      console
+     000002EF  A$console$257                      console
+     000002EF  C$console.c$40$2_0$14              console
+     000002F0  A$console$268                      console
+     000002F0  C$console.c$42$1_0$13              console
+     000002F0  C$console.c$43$1_0$13              console
+     000002F0  XG$puts$0$0                        console
+ASxxxx Linker V03.00 + NoICE + sdld,  page 5.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_GSINIT                             000002F2    0000000F =          15. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 6.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_GSFINAL                            00000301    00000001 =           1. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 7.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_DATA                               00000300    00000002 =           2. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000300  G$console$0_0$0                    console
+     00000300  _console                           console
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_BSS                                00000302    00000802 =        2050. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000B04  __stack                            crt0
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_HEAP                               00000B04    00000000 =           0. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000B04  __heap                             crt0
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
+
+Files Linked                              [ module(s) ]
+
+crt0.rel                                  [ crt0 ]
+test.rel                                  [ test ]
+console.rel                               [ console ]
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 11.
+
+User Base Address Definitions
+
+_CODE = 0x0205
+_DATA = 0x0300
+
+
