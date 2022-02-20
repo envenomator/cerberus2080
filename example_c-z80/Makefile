@@ -1,5 +1,5 @@
 STARTADDRESS	:= 0x0205
-DATASTART		:= 0x8000
+DATASTART		:= 0x1000
 SERIALPORT		:= /dev/ttyUSB0
 SEND_SCRIPT		:= ../tools/send.py
 
@@ -11,21 +11,21 @@ all:
 
 	# Compile console.c
 	sdcc -o console.rel \
-		-c --std-c11 -mz80 --debug \
+		-c --std-c11 -mz80 --debug -I /usr/share/sdcc/include \
 		--nostdinc --no-std-crt0 --nostdinc --nostdlib \
 		console.c
 	# Compile test.c
 	sdcc -o test.rel \
-		-c -mz80 --debug \
+		-c -mz80 --debug -I /usr/share/sdcc/include \
 		--nostdinc --no-std-crt0 --nostdinc --nostdlib \
 		test.c
 		
 	# Link both
 	sdcc -o test.ihx \
-		-mz80 -Wl -y --code-loc 0x0205 --data-loc 0x0300 \
+		-mz80 -Wl -y --code-loc 0x0205 --data-loc $(DATASTART)\
 		--std-c11 -mz80 --debug\
 		--no-std-crt0 --nostdinc --nostdlib \
-		-Llibsdcc-z80 -llibsdcc-z80 \
+		-Llibsdcc-z80 -lz80 \
 		crt0.rel test.rel console.rel
 	
 	# Finally, convert ihx to binary

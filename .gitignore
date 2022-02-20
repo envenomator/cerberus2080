@@ -1,3 +1,12 @@
 *.o
 *.bin
 /build/
+*.lst
+*.sym
+*.asm
+*.ihx
+*.lk
+*.noi
+*.map
+*.rel
+*.?db
