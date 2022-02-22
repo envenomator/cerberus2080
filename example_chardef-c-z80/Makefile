@@ -1,5 +1,5 @@
 STARTADDRESS	:= 0x0205
-DATASTART		:= 0x1000
+DATASTART		:= 0x0800
 SERIALPORT		:= /dev/ttyUSB0
 SEND_SCRIPT		:= ../tools/send.py
 
@@ -25,7 +25,7 @@ all:
 		-mz80 -Wl -y --code-loc 0x0205 --data-loc $(DATASTART)\
 		--std-c11 -mz80 --debug\
 		--no-std-crt0 --nostdinc --nostdlib \
-		-Llibsdcc-z80 -lz80 \
+		-Llibsdcc-z80 -lz80.lib \
 		crt0.rel test.rel console.rel
 	
 	# Finally, convert ihx to binary

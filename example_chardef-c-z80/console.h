@@ -8,6 +8,8 @@
 #define VIDEOSTART          (unsigned char*)0xf800
 #define VIDEOEND            (VIDEOSTART + SCREENWIDTH*SCREENHEIGHT)
 
+typedef volatile unsigned char chardefs[8];             // use as pointer to character definition memory area (0xf000)
+                                                        // ex: chardefs *ptr = (chardefs *)0xf000;
 void con_init();                                        // needed before any console IO
 void con_gotoxy(unsigned char x, unsigned char y);
 void con_cls();
