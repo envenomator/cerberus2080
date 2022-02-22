@@ -38,6 +38,8 @@ int main()
     con_putc(6);
     con_putc(7);
 
-    while(1);
+    con_gotoxy(1,28);
+    con_puts("Press any key - return to BIOS");
+    con_getc();
     return (0);
 }
