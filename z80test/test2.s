@@ -4,19 +4,18 @@
     .org $0205
 
     ld hl, string
-    ld bc, $f800
+    ld de, $f800
+    ld b, 8
 main:
     ld a, (hl) 
-    cp 0
-    jp z, loop
-
-    ld (bc),a
+    or $20
+    ld (de), a
     inc hl
-    inc bc
-    jr main
+    inc de
+    djnz main
 
 loop:
     jp loop
 
 string:
-    db "Een test, om te kijken!",0
+    db "Een Test, om te kijken!",0
