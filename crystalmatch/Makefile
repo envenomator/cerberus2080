@@ -14,19 +14,34 @@ all:
 		-c --std-c11 -mz80 --debug -I /usr/share/sdcc/include \
 		--nostdinc --no-std-crt0 --nostdinc --nostdlib \
 		console.c
+	# Compile random.c
+	sdcc -o random.rel \
+		-c -mz80 --debug -I /usr/share/sdcc/include \
+		--nostdinc --no-std-crt0 --nostdinc --nostdlib \
+		random.c
+	# Compile queue.c
+	sdcc -o queue.rel \
+		-c -mz80 --debug -I /usr/share/sdcc/include \
+		--nostdinc --no-std-crt0 --nostdinc --nostdlib \
+		queue.c
+	# Compile playfield.c
+	sdcc -o playfield.rel \
+		-c -mz80 --debug -I /usr/share/sdcc/include \
+		--nostdinc --no-std-crt0 --nostdinc --nostdlib \
+		playfield.c
 	# Compile main.c
 	sdcc -o main.rel \
 		-c -mz80 --debug -I /usr/share/sdcc/include \
 		--nostdinc --no-std-crt0 --nostdinc --nostdlib \
 		main.c
 		
-	# Link both
+	# Link all files
 	sdcc -o main.ihx \
 		-mz80 -Wl -y --code-loc 0x0205 --data-loc $(DATASTART)\
 		--std-c11 -mz80 --debug\
 		--no-std-crt0 --nostdinc --nostdlib \
 		-Llibsdcc-z80 -lz80.lib \
-		crt0.rel main.rel console.rel
+		crt0.rel main.rel console.rel random.rel queue.rel playfield.rel
 	
 	# Finally, convert ihx to binary
 	sdobjcopy -I ihex -O binary main.ihx main.bin
