@@ -13,7 +13,7 @@ char playfield_getchar(uint8_t id);
 void playfield_draw();
 void playfield_swap(char key);
 void draw_borders();
-void display_swap_message();
+void display_swap_message(bool swap);
 void cursor_show();
 void cursor_hide();
 void cursor_move(char key);

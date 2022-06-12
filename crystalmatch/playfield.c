@@ -101,8 +101,45 @@ void playfield_draw()
 }
 void playfield_swap(char key)
 {
-    if(key == 'a') return;
-    return;
+    uint8_t temp;
+    temp = playfield[playfield_cursorx][playfield_cursory]; // record current location ID
+
+    cursor_hide();
+    switch(key)
+    {
+        case 'w':
+            if(playfield_cursory > 0)
+            {
+                playfield[playfield_cursorx][playfield_cursory] = playfield[playfield_cursorx][playfield_cursory - 1];
+                playfield[playfield_cursorx][playfield_cursory - 1] = temp;
+            }
+            break;
+        case 'a':
+            if(playfield_cursorx > 0)
+            {
+                playfield[playfield_cursorx][playfield_cursory] = playfield[playfield_cursorx - 1][playfield_cursory];
+                playfield[playfield_cursorx - 1][playfield_cursory] = temp;
+            }
+            break;
+        case 's':
+            if(playfield_cursory < FIELDHEIGHT-1)
+            {
+                playfield[playfield_cursorx][playfield_cursory] = playfield[playfield_cursorx][playfield_cursory + 1];
+                playfield[playfield_cursorx][playfield_cursory + 1] = temp;
+            }
+            break;
+        case 'd':
+            if(playfield_cursorx < FIELDWIDTH-1)
+            {
+                playfield[playfield_cursorx][playfield_cursory] = playfield[playfield_cursorx + 1][playfield_cursory];
+                playfield[playfield_cursorx + 1][playfield_cursory] = temp;
+            }
+            break;
+        default:
+            break;
+    }
+    playfield_draw();
+    cursor_show();
 }
 
 void draw_borders()
@@ -110,8 +147,13 @@ void draw_borders()
     return;
 }
 
-void display_swap_message()
+void display_swap_message(bool swap)
 {
+    // stub code for now
+    con_gotoxy(0,22);
+    if(swap) con_puts("Select direction to swap");
+    else     con_puts("ENTER to start swap mode");
+
     return;
 }
 

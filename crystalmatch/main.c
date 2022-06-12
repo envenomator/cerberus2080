@@ -22,20 +22,29 @@ int main()
     playfield_draw();
     cursor_show();
 
+    display_swap_message(swap);
     while(1)
     {
         key = con_getc();
         switch(key)
         {
-            case 0xa:   // LF / ENTER
+            case 0xd:   // LF / ENTER
                 swap = !swap;
-                display_swap_message();
+                display_swap_message(swap);
                 break;
+            case 0x1b:  // ESCAPE
+                swap = false;
+                display_swap_message(swap);
             case 'w':
             case 'a':
             case 's':
             case 'd':
-                if(swap) playfield_swap(key);
+                if(swap)
+                {
+                    playfield_swap(key);
+                    swap = false;
+                    display_swap_message(swap);
+                }
                 else cursor_move(key);
                 break;
             default:
