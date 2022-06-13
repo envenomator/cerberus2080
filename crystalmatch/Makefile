@@ -1,5 +1,5 @@
 STARTADDRESS	:= 0x0205
-DATASTART		:= 0x0800
+DATASTART		:= 0x1000
 SERIALPORT		:= /dev/ttyUSB0
 SEND_SCRIPT		:= ../tools/send.py
 

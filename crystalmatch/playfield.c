@@ -14,6 +14,7 @@
 // 4 - triangle
 // 5 - dot
 
+//uint8_t playfield[FIELDWIDTH][FIELDHEIGHT];
 uint8_t playfield[FIELDWIDTH][FIELDHEIGHT];
 uint8_t playfield_cursorx;
 uint8_t playfield_cursory;
@@ -26,7 +27,7 @@ void playfield_init()
     {
         for(y = 0; y < FIELDHEIGHT; y++)
         {
-            playfield[x][y] = 0; // empty ID
+            playfield[x][y] = 1; // empty ID
         }
     }
 
@@ -180,7 +181,6 @@ void cursor_hide()
 }
 void cursor_move(char key)
 {
-    cursor_hide();
     switch(key)
     {
         case 'w':
@@ -198,5 +198,52 @@ void cursor_move(char key)
         default:
             break;
     }
-    cursor_show();
+}
+
+bool playfield_checkimplode(uint8_t x, uint8_t y)
+{
+    uint8_t origin;
+    uint8_t t;
+    uint8_t number = 0;
+
+    origin = playfield[x][y];
+    
+    // check left
+    t = x;
+    number = 1;
+    while(t > 0)
+    {
+        t--;
+        if(playfield[t][y] == origin) number++;
+        else break; 
+    }
+    // check right
+    t = x;
+    while(t < FIELDWIDTH-1)
+    {
+        t++;
+        if(playfield[t][y] == origin) number++;
+        else break;
+    }
+    if(number > 2) return true;
+
+    // check up
+    t = y;
+    number = 1;
+    while(t > 0)
+    {
+        t--;
+        if(playfield[x][t] == origin) number++;
+        else break;
+    }
+    // check down
+    t = y;
+    while(t < FIELDHEIGHT-1)
+    {
+        t++;
+        if(playfield[x][t] == origin) number++;
+        else break;
+    }
+    if(number > 2) return true;
+    return false;
 }
