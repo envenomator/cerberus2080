@@ -5,9 +5,10 @@
 
 #define QUEUEDEPTH  FIELDWIDTH*FIELDHEIGHT*2
 void queue_init();
-void queue_add(uint8_t x, uint8_t y);
-void queue_delete();
+void queue_push(uint8_t x, uint8_t y);
+void queue_pop();           // remove head/front of the queue
 bool queue_isempty();
 bool queue_hasitems();
-
+uint8_t queue_getx();
+uint8_t queue_gety();
 #endif

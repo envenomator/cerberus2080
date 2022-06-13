@@ -22,7 +22,7 @@ void queue_init()
     queue_tailnumber = 0;
     queue_items = 0;
 }
-void queue_add(uint8_t x, uint8_t y)
+void queue_push(uint8_t x, uint8_t y)
 {
     queue_items++;
     queue_tailnumber++;
@@ -30,7 +30,7 @@ void queue_add(uint8_t x, uint8_t y)
     queue[queue_tailnumber].x = x;
     queue[queue_tailnumber].y = y;
 }
-void queue_delete()
+void queue_pop()
 {
     queue_items--;
     queue_headnumber++;
@@ -43,4 +43,14 @@ bool queue_isempty()
 bool queue_hasitems()
 {
     return queue_items > 0;
+}
+
+uint8_t queue_getx()
+{
+    return queue[queue_headnumber].x;
+}
+
+uint8_t queue_gety()
+{
+    return queue[queue_headnumber].y;
 }
