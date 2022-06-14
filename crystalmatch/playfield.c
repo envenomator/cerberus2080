@@ -178,17 +178,107 @@ void playfield_implode_cycle()
     }
 }
 
-void playfield_markempty(uint8_t tempx, uint8_t tempy)
+void playfield_markempty(uint8_t x, uint8_t y)
 {
+    // Marks all horizontal/vertical neighbors with same ID as EMPTY id (0)
+    // Also mark number of empty items at each row for later collapse
+    uint8_t origin;
+    uint8_t t;
 
+    origin = playfield[x][y];
+   
+    // clear missing table out to 0 first
+    for(t = 0; t < FIELDWIDTH; t++) playfield_missing[t] = 0;
+
+    // collapse x/y position first
+    playfield_missing[x] = 1;
+
+    // check left
+    t = x;
+    while(t > 0)
+    {
+        t--;
+        if(playfield[t][y] == origin)
+        {
+            playfield[t][y] = 0;   // mark empty id
+            playfield_missing[t] = 1;   // mark collapse
+        } 
+        else break; 
+    }
+    // check right
+    t = x;
+    while(t < FIELDWIDTH-1)
+    {
+        t++;
+        if(playfield[t][y] == origin)
+        {
+            playfield[t][y] = 0;
+            playfield_missing[t] = 1;
+        } 
+        else break;
+    }
+    // check up
+    t = y;
+    while(t > 0)
+    {
+        t--;
+        if(playfield[x][t] == origin)
+        {
+            playfield[x][t] = 0;
+            playfield_missing[x] += 1;
+        } 
+        else break;
+    }
+    // check down
+    t = y;
+    while(t < FIELDHEIGHT-1)
+    {
+        t++;
+        if(playfield[x][t] == origin)
+        {
+            playfield[x][t] = 0;   
+            playfield_missing[x] += 1;
+        } 
+        else break;
+    }
 }
-void playfield_gui_implode(uint8_t tempx, uint8_t tempy)
+
+void playfield_gui_implode(uint8_t x, uint8_t y)
 {
-    
+    // implode area around tempx / tempy
+    // simply redraw entire playfield for now
+    playfield_draw(); 
 }
+
 void playfield_collapse()
 {
+    // check horizontal missing table, drop # of missing items in each column
+    uint8_t x,y,yt,n;
 
+    for(x = 0; x < FIELDWIDTH; x++)
+    {
+        n = playfield_missing[n];
+        if(n)
+        {
+            // find bottom position first; position is marked as empty id (0)
+            y = FIELDHEIGHT - 1;
+            while(playfield[x][y]) y--;
+
+            // now collapse remaining stack
+            yt = y;
+            while(yt > 0)
+            {
+                yt = y - n;  // # positions upward is our 'top neighbor' that collapses on us
+                playfield[x][y] = playfield[x][yt];
+                // might delay here in future and display first             
+            }
+            // now fill new entries from the top
+            while(n)
+            {
+
+            }            
+        }
+    }
 }
 
 void draw_borders()
@@ -250,6 +340,7 @@ void cursor_move(char key)
 
 bool playfield_checkimplode(uint8_t x, uint8_t y)
 {
+    // checks if the given coordinate NEEDS implosion, doesn't actually do anything to the playfield
     uint8_t origin;
     uint8_t t;
     uint8_t number = 0;
