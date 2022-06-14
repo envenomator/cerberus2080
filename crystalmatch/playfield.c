@@ -257,7 +257,7 @@ void playfield_collapse()
 
     for(x = 0; x < FIELDWIDTH; x++)
     {
-        n = playfield_missing[n];
+        n = playfield_missing[x];
         if(n)
         {
             // find bottom position first; position is marked as empty id (0)
