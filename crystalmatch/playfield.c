@@ -265,17 +265,27 @@ void playfield_collapse()
             while(playfield[x][y]) y--;
 
             // now collapse remaining stack
-            yt = y;
-            while(yt > 0)
+            // first check if there is anything left on top
+            yt = y - n;
+            while(yt) // if yt == 0, then just drop new items, no stack left to collapse
             {
-                yt = y - n;  // # positions upward is our 'top neighbor' that collapses on us
                 playfield[x][y] = playfield[x][yt];
-                // might delay here in future and display first             
+                playfield[x][yt] = 0;
+                // later on, need to display this change
+                // display
+                // delay() etc
+                // display, something
+                y--;
+                yt--;
             }
+            
             // now fill new entries from the top
             while(n)
             {
-
+                playfield[x][y] = random_get();
+                // later on, need to display this change
+                y--;
+                n--;
             }            
         }
     }
