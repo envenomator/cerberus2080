@@ -14,6 +14,7 @@
 #define KEY_RIGHT   0x15
 #define KEY_ESC     0x0b
 #define KEY_ENTER   0x0d
+
 typedef volatile unsigned char chardefs[8];             // use as pointer to character definition memory area (0xf000)
                                                         // ex: chardefs *ptr = (chardefs *)0xf000;
 void con_init();                                        // needed before any console IO

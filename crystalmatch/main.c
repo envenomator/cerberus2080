@@ -123,6 +123,10 @@ int main()
                 swap = !swap;
                 display_swap_message(swap);
                 break;
+            case 0x1b:
+                swap = false;
+                display_swap_message(swap);
+                break;
             case KEY_UP:
             case KEY_DOWN:
             case KEY_LEFT:
