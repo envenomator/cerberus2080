@@ -3,7 +3,7 @@
 
 #include "playfield.h"
 
-#define QUEUEDEPTH  FIELDWIDTH*FIELDHEIGHT*2
+#define QUEUEDEPTH  FIELDWIDTH*FIELDHEIGHT
 void queue_init();
 void queue_push(uint8_t x, uint8_t y);
 void queue_pop();           // remove head/front of the queue

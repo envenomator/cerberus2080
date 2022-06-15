@@ -101,12 +101,11 @@ int main()
     uint8_t test;
 
     random_init();
-    playfield_init();
     queue_init();
     con_init();
 
     draw_borders();
-    playfield_init_random();
+    playfield_init();
     playfield_draw();
     cursor_show();
     
@@ -120,17 +119,14 @@ int main()
         key = con_getc();
         switch(key)
         {
-            case 0xd:   // LF / ENTER
+            case KEY_ENTER:   // LF / ENTER
                 swap = !swap;
                 display_swap_message(swap);
                 break;
-            case 0x1b:  // ESCAPE
-                swap = false;
-                display_swap_message(swap);
-            case 'w':
-            case 'a':
-            case 's':
-            case 'd':
+            case KEY_UP:
+            case KEY_DOWN:
+            case KEY_LEFT:
+            case KEY_RIGHT:
                 if(swap)
                 {
                     playfield_swap(key);

@@ -129,7 +129,7 @@ void playfield_swap(char key)
     cursor_hide();
     switch(key)
     {
-        case 'w':
+        case KEY_UP:
             if(playfield_cursory > 0)
             {
                 tempx = playfield_cursorx;
@@ -138,7 +138,7 @@ void playfield_swap(char key)
                 playfield[playfield_cursorx][tempy] = tempid;
             }
             break;
-        case 'a':
+        case KEY_LEFT:
             if(playfield_cursorx > 0)
             {
                 tempx = playfield_cursorx - 1;
@@ -147,7 +147,7 @@ void playfield_swap(char key)
                 playfield[tempx][playfield_cursory] = tempid;
             }
             break;
-        case 's':
+        case KEY_DOWN:
             if(playfield_cursory < FIELDHEIGHT-1)
             {
                 tempx = playfield_cursorx;
@@ -156,7 +156,7 @@ void playfield_swap(char key)
                 playfield[playfield_cursorx][tempy] = tempid;
             }
             break;
-        case 'd':
+        case KEY_RIGHT:
             if(playfield_cursorx < FIELDWIDTH-1)
             {
                 tempx = playfield_cursorx + 1;
@@ -190,6 +190,7 @@ void playfield_implode_cycle()
             playfield_markempty(tempx, tempy);
             // GUI implode
             playfield_gui_implode(tempx, tempy);
+            con_getc();
             // Now collapse the field to fill implosion. Collapse will push/trigger additional checks in the queue
             playfield_collapse();
             playfield_draw();
@@ -212,6 +213,9 @@ void playfield_markempty(uint8_t x, uint8_t y)
 
     // collapse x/y position first
     playfield_missing[x] = 1;
+
+    // mark given position as empty
+    playfield[x][y] = 0;
 
     // check left
     t = x;
@@ -286,22 +290,28 @@ void playfield_collapse()
 
             // now collapse remaining stack
             // first check if there is anything left on top
-            yt = y - n;
-            while(yt) // if yt == 0, then just drop new items, no stack left to collapse
+            if(y > (n-1))
             {
-                playfield[x][y] = playfield[x][yt];
-                // later on, need to display this change
-                // display
-                // delay() etc
-                // display, something
-                y--;
-                yt--;
+                yt = y - n; // top of the ceiling
+                while(1) 
+                {
+                    playfield[x][y] = playfield[x][yt]; // swap with immediate top neighbor
+                    queue_push(x,y);                    // record change to this location, needs check later
+                    // later on, need to display this change
+                    // display
+                    // delay() etc
+                    // display, something
+                    y--;
+                    if(yt) yt--;
+                    else break; // we have copied the last item from the top (yt==0)
+                }
             }
             
             // now fill new entries from the top
             while(n)
             {
                 playfield[x][y] = random_get();
+                queue_push(x,y);
                 // later on, need to display this change
                 y--;
                 n--;
@@ -350,16 +360,16 @@ void cursor_move(char key)
 {
     switch(key)
     {
-        case 'w':
+        case KEY_UP:
             if(playfield_cursory > 0) playfield_cursory--;  
             break;
-        case 'a':
+        case KEY_LEFT:
             if(playfield_cursorx > 0) playfield_cursorx--;
             break;
-        case 's':
+        case KEY_DOWN:
             if(playfield_cursory < FIELDHEIGHT-1) playfield_cursory++;
             break;
-        case 'd':
+        case KEY_RIGHT:
             if(playfield_cursorx < FIELDWIDTH-1) playfield_cursorx++;
             break;
         default:
