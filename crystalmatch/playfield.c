@@ -173,6 +173,7 @@ void playfield_implode_cycle()
             playfield_gui_implode(tempx, tempy);
             // Now collapse the field to fill implosion. Collapse will push/trigger additional checks in the queue
             playfield_collapse();
+            playfield_draw();
         }
         queue_pop();    // remove item we checked last
     }
@@ -270,7 +271,6 @@ void playfield_collapse()
             while(yt) // if yt == 0, then just drop new items, no stack left to collapse
             {
                 playfield[x][y] = playfield[x][yt];
-                playfield[x][yt] = 0;
                 // later on, need to display this change
                 // display
                 // delay() etc
