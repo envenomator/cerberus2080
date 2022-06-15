@@ -20,7 +20,7 @@ uint8_t playfield_cursorx;                      // Cursor X position
 uint8_t playfield_cursory;                      // Cursor Y position
 uint8_t playfield_missing[FIELDWIDTH];          // Horizontal drop-check after implosions. Each items contains #items to drop in that column
 
-void playfield_init()
+void playfield_init_empty()
 {
     // start out with an empty playfield
     uint8_t x, y;
@@ -36,6 +36,25 @@ void playfield_init()
     playfield_cursorx = FIELDWIDTH/2;
     playfield_cursory = FIELDHEIGHT/2;
 }
+
+void playfield_init()
+{
+    uint8_t data[] = {1,2,2,1,5,5,1,2,3,1,2,5,1,1,2,1,3,1,5,1,1,5,3,2,1,4,1,2,1,4,2,1,1,2,1,3,2,1,3,1,1,3,5,1,5,5,1,3,1,4};
+    uint8_t x,y,n;
+
+    n = 0;
+    for(y = 0; y < FIELDHEIGHT; y++)
+    {
+        for(x = 0; x < FIELDWIDTH; x++)
+        {
+            playfield[x][y] = data[n++];
+        }
+    }
+    // cursor +/- in the middle
+    playfield_cursorx = FIELDWIDTH/2;
+    playfield_cursory = FIELDHEIGHT/2;
+}
+
 void playfield_init_random()
 {
     uint8_t x, y;

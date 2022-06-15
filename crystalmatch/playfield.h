@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define FIELDWIDTH 20
-#define FIELDHEIGHT 15
+#define FIELDWIDTH 10
+#define FIELDHEIGHT 5
 #define PLAYFIELD_STARTX    10
 #define PLAYFIELD_STARTY    5
 
