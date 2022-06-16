@@ -21,6 +21,7 @@ uint8_t playfield_cursory;                      // Cursor Y position
 uint8_t playfield_missing[FIELDWIDTH];          // Horizontal drop-check after implosions. Each items contains #items to drop in that column
 
 #define TIMERDELAY  200
+#define TIMERDELAY2 16000
 
 unsigned char playfield_tiledefs[6][32] =
 {
@@ -46,6 +47,13 @@ unsigned char playfield_tiles[9][4] = // Actual IDs in video memory
 
 unsigned char cursor_border[]={ 0x3F,0x40,0x80,0x80,0x80,0x80,0x80,0x80,0xFC,0x2,0x1,0x1,0x1,0x1,0x1,0x1,0x80,0x80,0x80,0x80,0x80,0x80,0x40,0x3F,0x1,0x1,0x1,0x1,0x1,0x1,0x2,0xFC};
 unsigned char cursor_mask[]={ 0x0,0x3F,0x7F,0x7F,0x7F,0x7F,0x7F,0x7F,0x0,0xFC,0xFE,0xFE,0xFE,0xFE,0xFE,0xFE,0x7F,0x7F,0x7F,0x7F,0x7F,0x7F,0x3F,0x0,0xFE,0xFE,0xFE,0xFE,0xFE,0xFE,0xFC,0x0};
+
+unsigned char implosionmasks[3][32] =
+{
+    { 0x0,0x0,0x0,0x1F,0x1F,0x1F,0x1F,0x1F,0x0,0x0,0x0,0xF8,0xF8,0xF8,0xF8,0xF8,0x1F,0x1F,0x1F,0x1F,0x1F,0x0,0x0,0x0,0xF8,0xF8,0xF8,0xF8,0xF8,0x0,0x0,0x0},
+    { 0x0,0x0,0x0,0x0,0x0,0x7,0x7,0x7,0x0,0x0,0x0,0x0,0x0,0xE0,0xE0,0xE0,0x7,0x7,0x7,0x0,0x0,0x0,0x0,0x0,0xE0,0xE0,0xE0,0x0,0x0,0x0,0x0,0x0},
+    { 0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x3,0x0,0x0,0x0,0x0,0x0,0x0,0xC0,0xC0,0x3,0x3,0x0,0x0,0x0,0x0,0x0,0x0,0xC0,0xC0,0x0,0x0,0x0,0x0,0x0,0x0}
+};
 
 void playfield_init_tiles()
 {
@@ -248,7 +256,7 @@ void playfield_swap(char key)
 
 void playfield_implode_cycle()
 {
-    uint8_t tempx, tempy;
+    uint8_t tempx, tempy, tileid;
 
     while(queue_hasitems())
     {
@@ -257,10 +265,12 @@ void playfield_implode_cycle()
         tempy = queue_gety();
         if(playfield_checkimplode(tempx, tempy))
         {
+            // store old tileID, so we can animate it back to life later
+            tileid = playfield[tempx][tempy];
             // Mark all radial items hor/vert from current tempx/tempy coordinate as empty
             playfield_markempty(tempx, tempy);
             // GUI implode
-            playfield_gui_implode(tempx, tempy);
+            playfield_gui_implode(tempx, tempy, tileid);
             // Now collapse the field to fill implosion. Collapse will push/trigger additional checks in the queue
             playfield_collapse();
             playfield_draw();
@@ -337,11 +347,50 @@ void playfield_markempty(uint8_t x, uint8_t y)
     }
 }
 
-void playfield_gui_implode(uint8_t x, uint8_t y)
+void playfield_gui_implode(uint8_t x, uint8_t y, uint8_t tileid)
 {
-    // implode area around tempx / tempy
-    // simply redraw entire playfield for now
-    playfield_draw(); 
+    chardefs *ptr = (chardefs *)0xf000; // start of video character definitions
+    uint8_t i,b,n;
+    uint8_t *brd;
+    uint16_t timer;
+    uint8_t (*p)[32];
+
+    // prepare tile ID 0 as buffer
+    // currently, an implosion in the field has been marked as empty ID 0, so all we need to do
+    // is animate ID 0.
+    // First fill ID 0 with old tileid data and then animate it out of existence
+    //
+    // Copy tileid data to ID 0
+    for(i = 0; i < 4; i++)
+    {
+        for(b = 0; b < 8; b++)
+        {
+            ptr[playfield_tiles[0][i]][b] = ptr[playfield_tiles[tileid][i]][b];
+        }
+        timer = TIMERDELAY2;
+        while(timer--);
+    }
+    // Now apply masks and animate
+    for(n = 0; n < 3; n++)
+    {
+        brd = implosionmasks[n];    // implosionmask data, need to AND this to buffer ID 0 each time
+        for(i = 0; i < 4; i++)
+        {
+            for(b = 0; b < 8; b++)
+            {
+                ptr[playfield_tiles[0][i]][b] = ptr[playfield_tiles[0][i]][b] & *brd;
+                brd++;
+            }
+        }
+        timer = TIMERDELAY2;
+        while(timer--);
+    } 
+    // Reset tile ID 0 to original data
+    p = playfield_tiledefs;
+    for(i = 0; i < 4; i++)
+    {
+        memcpy((void *)ptr[(playfield_tiles[0][i])], *(p) + i*8, 8);
+    }
 }
 
 void playfield_tiledrop(uint8_t x, uint8_t yfrom, uint8_t tileid)
