@@ -27,7 +27,7 @@ void cursor_move(char key);
 bool playfield_checkimplode(uint8_t x, uint8_t y);  // only check if a location NEEDS implosion, no actual work
 void playfield_implode_cycle();                     // internal function - all the implosion work goes here
 void playfield_markempty(uint8_t x, uint8_t y);
-void playfield_gui_implode(uint8_t x, uint8_t y, uint8_t tileid);           // internal function
+void playfield_gui_implode(uint8_t tileid);           // internal function
 void playfield_collapse();                          // internal function - will trigger additional push of checks to the queue
 void playfield_init_tiles();
 #endif

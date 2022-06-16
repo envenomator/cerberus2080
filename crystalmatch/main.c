@@ -98,7 +98,6 @@ int main()
 {
     char key;
     bool swap = false;
-    uint8_t test;
 
     random_init();
     queue_init();
