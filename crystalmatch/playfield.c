@@ -29,15 +29,20 @@ unsigned char playfield_tiledefs[6][32] =
     {0x0,0x0,0x1,0x1,0x1,0x3,0x5,0x3E,0x0,0x0,0x80,0x80,0x80,0xC0,0xA0,0x7C,0x3E,0x5,0x3,0x1,0x1,0x1,0x0,0x0,0x7C,0xA0,0xC0,0x80,0x80,0x80,0x0,0x0},
     {0x0,0x0,0x0,0x0,0x0,0x3,0x7,0x7,0x0,0x0,0x0,0x0,0x0,0xC0,0xE0,0xE0,0x7,0x7,0x3,0x0,0x0,0x0,0x0,0x0,0xE0,0xE0,0xC0,0x0,0x0,0x0,0x0,0x0}
 };
-unsigned char playfield_tiles[6][4] = // Actual IDs in video memory
+unsigned char playfield_tiles[7][4] = // Actual IDs in video memory
 {
     {128,129,130,131},
     {132,133,134,135},
     {136,137,138,139},
     {140,141,142,143},
     {144,145,146,147},
-    {148,149,150,151}
+    {148,149,150,151},
+    {152,153,154,155}   // ID 6 is a buffer for a shown cursor - never drawn by playfield_draw, only by cursor_show()
 };
+
+unsigned char cursor_border[]={ 0x3F,0x40,0x80,0x80,0x80,0x80,0x80,0x80,0xFC,0x2,0x1,0x1,0x1,0x1,0x1,0x1,0x80,0x80,0x80,0x80,0x80,0x80,0x40,0x3F,0x1,0x1,0x1,0x1,0x1,0x1,0x2,0xFC};
+unsigned char cursor_mask[]={ 0x0,0x3F,0x7F,0x7F,0x7F,0x7F,0x7F,0x7F,0x0,0xFC,0xFE,0xFE,0xFE,0xFE,0xFE,0xFE,0x7F,0x7F,0x7F,0x7F,0x7F,0x7F,0x3F,0x0,0xFE,0xFE,0xFE,0xFE,0xFE,0xFE,0xFC,0x0};
+
 void playfield_init_tiles()
 {
     chardefs *ptr = (chardefs *)0xf000; // start of video character definitions
@@ -138,9 +143,34 @@ char playfield_getchar(uint8_t id)
     }
     return o;
 }
+void playfield_drawtile(uint8_t x, uint8_t y, uint8_t tileid)
+{
+    // Draw tileID on PLAYFIELD coordinate on screen
+    // tileid is 0..5
+    uint8_t screenx, screeny;
+
+    screenx = PLAYFIELD_STARTX + (x << 1);
+    screeny = PLAYFIELD_STARTY + (y << 1);
+
+    con_gotoxy(screenx, screeny);
+    con_putc(playfield_tiles[tileid][0]);
+    con_putc(playfield_tiles[tileid][1]);
+    con_gotoxy(screenx, screeny + 1);
+    con_putc(playfield_tiles[tileid][2]);
+    con_putc(playfield_tiles[tileid][3]);
+}
 void playfield_draw()
 {
+    uint8_t x,y,tileid;
 
+    for(y = 0; y < FIELDHEIGHT; y++)
+    {
+        for(x = 0; x < FIELDWIDTH; x++)
+        {
+            //playfield_drawtile(PLAYFIELD_STARTX+(2*x),PLAYFIELD_STARTY+(2*y),playfield[x][y]);
+            playfield_drawtile(x,y,playfield[x][y]);
+        }
+    } 
 }
 void playfield_draw_old()
 {
@@ -375,6 +405,30 @@ void display_swap_message(bool swap)
 
 void cursor_show()
 {
+    uint8_t tileid = playfield[playfield_cursorx][playfield_cursory];
+    chardefs *ptr = (chardefs *)0xf000; // start of video character definitions
+    uint8_t i,b;
+    uint8_t *brd = cursor_border;   // point to begin of or definition
+
+    // prepare tile ID 6 as buffer for this 'cursor' location
+    for(i = 0; i < 4; i++)
+    {
+        for(b = 0; b < 8; b++)
+        {
+            ptr[playfield_tiles[6][i]][b] = ptr[playfield_tiles[tileid][i]][b] | *brd;
+            brd++;
+        }
+    }
+    playfield_drawtile(playfield_cursorx, playfield_cursory, 6);
+}
+void cursor_hide()
+{
+    uint8_t tileid = playfield[playfield_cursorx][playfield_cursory];
+
+    playfield_drawtile(playfield_cursorx, playfield_cursory, tileid);
+}
+void cursor_show_old()
+{
     // for now, just inverse the current position
     char o;
 
@@ -384,7 +438,7 @@ void cursor_show()
     con_gotoxy(PLAYFIELD_STARTX+playfield_cursorx, PLAYFIELD_STARTY+playfield_cursory);
     con_putc(o);
 }
-void cursor_hide()
+void cursor_hide_()
 {
     // for now, just normalize the current position
     char o;

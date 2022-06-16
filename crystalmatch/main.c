@@ -106,6 +106,14 @@ int main()
 
     draw_borders();
     playfield_init_tiles();
+/*
+    playfield_drawtile(0,0,0);
+    playfield_drawtile(0,2,1);
+    playfield_drawtile(0,4,2);
+    playfield_drawtile(0,6,3);
+    playfield_drawtile(0,8,4);
+    playfield_drawtile(0,10,5);
+    while(1);
     con_gotoxy(0,0);
     con_putc(128);
     con_putc(129);
@@ -143,12 +151,13 @@ int main()
     con_putc(150);
     con_putc(151);
     while(1);
-
+*/
 
     playfield_init();
     playfield_draw();
     cursor_show();
-    
+    while(1);
+
     display_swap_message(swap);
     while(1)
     {
