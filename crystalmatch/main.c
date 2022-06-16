@@ -10,23 +10,23 @@
 
 int main()
 {
-    bool swapstatus;
-    bool gameover;
+    bool swapstatus = false;
+    bool gameover = false;
     bool playing = true;
     char key;
-    swapstatus = false;
+    uint16_t totalpoints = 0;
 
-    con_init();
-    random_init();
-    queue_init();
-    playfield_init_tiles();
+    con_init();                 // generic console
+    random_init();              // random value generator
+    queue_init();               // push/pop queue for stacked checks
+    playfield_init_tiles();     // load tiles from memory to video memory
 
     while(playing)
     {
         gameover = false;
-        con_cls();
-        con_init_timer();
-        draw_borders();
+        con_cls();              // clear screen
+        con_init_timer();       // reset timer for this game
+        draw_borders();         
         playfield_init();
         playfield_draw();
         cursor_show(swapstatus);
@@ -34,11 +34,7 @@ int main()
         display_swap_message(swapstatus);
         while(!gameover)
         {
-            //print_cursorposition();
-            //test = playfield_checkimplode(playfield_cursorx, playfield_cursory);
-            //print_sim(test);
-
-            key = con_getc_timer(160);
+            key = con_getc_timer(500);
             switch(key)
             {
                 case KEY_ENTER:   // LF / ENTER

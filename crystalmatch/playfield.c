@@ -27,6 +27,7 @@ uint8_t playfield[FIELDWIDTH][FIELDHEIGHT];     // the actual playfield with IDs
 uint8_t playfield_cursorx;                      // Cursor X position
 uint8_t playfield_cursory;                      // Cursor Y position
 uint8_t playfield_missing[FIELDWIDTH];          // Horizontal drop-check after implosions. Each items contains #items to drop in that column
+uint16_t playfield_totalpoints;
 
 #define TIMERDELAY  200
 #define TIMERDELAY2 4000
@@ -91,6 +92,8 @@ void playfield_init_empty()
     // cursor +/- in the middle
     playfield_cursorx = FIELDWIDTH/2;
     playfield_cursory = FIELDHEIGHT/2;
+
+    playfield_totalpoints = 0;
 }
 
 void playfield_init()
@@ -109,6 +112,8 @@ void playfield_init()
     // cursor +/- in the middle
     playfield_cursorx = FIELDWIDTH/2;
     playfield_cursory = FIELDHEIGHT/2;
+
+    playfield_totalpoints = 0;
 }
 
 void playfield_init_random()
@@ -187,6 +192,7 @@ void playfield_draw()
             playfield_drawtile(x,y,playfield[x][y]);
         }
     } 
+    playfield_display_points();
 }
 void playfield_draw_old()
 {
@@ -261,6 +267,7 @@ void playfield_swap(char key)
 void playfield_implode_cycle()
 {
     uint8_t tempx, tempy, tileid;
+    uint8_t points;
 
     while(queue_hasitems())
     {
@@ -272,7 +279,8 @@ void playfield_implode_cycle()
             // store old tileID, so we can animate it back to life later
             tileid = playfield[tempx][tempy];
             // Mark all radial items hor/vert from current tempx/tempy coordinate as empty
-            playfield_markempty(tempx, tempy);
+            points = playfield_markempty(tempx, tempy);
+            playfield_display_addpoints(points);
             // GUI implode
             playfield_gui_implode(tileid);
             // Now collapse the field to fill implosion. Collapse will push/trigger additional checks in the queue
@@ -283,12 +291,13 @@ void playfield_implode_cycle()
     }
 }
 
-void playfield_markempty(uint8_t x, uint8_t y)
+uint8_t playfield_markempty(uint8_t x, uint8_t y)
 {
     // Marks all horizontal/vertical neighbors with same ID as EMPTY id (0)
     // Also mark number of empty items at each row for later collapse
     uint8_t origin;
     uint8_t t;
+    uint8_t points;
 
     origin = playfield[x][y];
    
@@ -300,6 +309,7 @@ void playfield_markempty(uint8_t x, uint8_t y)
 
     // mark given position as empty
     playfield[x][y] = 0;
+    points = 1;
 
     // check left
     t = x;
@@ -310,6 +320,7 @@ void playfield_markempty(uint8_t x, uint8_t y)
         {
             playfield[t][y] = 0;   // mark empty id
             playfield_missing[t] = 1;   // mark collapse
+            points++;
         } 
         else break; 
     }
@@ -322,6 +333,7 @@ void playfield_markempty(uint8_t x, uint8_t y)
         {
             playfield[t][y] = 0;
             playfield_missing[t] = 1;
+            points++;
         } 
         else break;
     }
@@ -334,6 +346,7 @@ void playfield_markempty(uint8_t x, uint8_t y)
         {
             playfield[x][t] = 0;
             playfield_missing[x] += 1;
+            points++;
         } 
         else break;
     }
@@ -346,9 +359,11 @@ void playfield_markempty(uint8_t x, uint8_t y)
         {
             playfield[x][t] = 0;   
             playfield_missing[x] += 1;
+            points++;
         } 
         else break;
     }
+    return points;
 }
 
 void playfield_gui_implode(uint8_t tileid)
@@ -526,14 +541,34 @@ void playfield_collapse()
 
 void draw_borders()
 {
-    con_gotoxy(23,7);
-    con_puts("  Time left: ");
+    con_gotoxy(22,7);
+    con_puts("   Time left: ");
 
-    con_gotoxy(23,11);
-    con_puts("Move points: ");
+    con_gotoxy(22,11);
+    con_puts("      Points: ");
+
+    playfield_display_points();
+
     return;
 }
 
+void playfield_display_addpoints(uint8_t points)
+{
+    playfield_totalpoints += points;
+
+    playfield_display_points();
+    return;
+}
+
+void playfield_display_points()
+{
+    char msg[5];
+
+    itoa(playfield_totalpoints, msg, 10);
+    con_gotoxy(35,11);
+    con_puts(msg);
+    return;
+}
 void display_swap_message(bool swap)
 {
     // stub code for now

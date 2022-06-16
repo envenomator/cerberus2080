@@ -6,7 +6,7 @@
 
 #define FIELDWIDTH 10
 #define FIELDHEIGHT 7
-#define PLAYFIELD_STARTX    1 
+#define PLAYFIELD_STARTX    2 
 #define PLAYFIELD_STARTY    6
 
 extern uint8_t playfield_cursorx;
@@ -26,8 +26,10 @@ void cursor_hide();
 void cursor_move(char key);
 bool playfield_checkimplode(uint8_t x, uint8_t y);  // only check if a location NEEDS implosion, no actual work
 void playfield_implode_cycle();                     // internal function - all the implosion work goes here
-void playfield_markempty(uint8_t x, uint8_t y);
+uint8_t playfield_markempty(uint8_t x, uint8_t y);
 void playfield_gui_implode(uint8_t tileid);           // internal function
 void playfield_collapse();                          // internal function - will trigger additional push of checks to the queue
 void playfield_init_tiles();
+void playfield_display_addpoints(uint8_t points);
+void playfield_display_points();
 #endif
