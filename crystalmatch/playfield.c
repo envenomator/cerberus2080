@@ -20,6 +20,8 @@ uint8_t playfield_cursorx;                      // Cursor X position
 uint8_t playfield_cursory;                      // Cursor Y position
 uint8_t playfield_missing[FIELDWIDTH];          // Horizontal drop-check after implosions. Each items contains #items to drop in that column
 
+#define TIMERDELAY  200
+
 unsigned char playfield_tiledefs[6][32] =
 {
     {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0},
@@ -29,7 +31,7 @@ unsigned char playfield_tiledefs[6][32] =
     {0x0,0x0,0x1,0x1,0x1,0x3,0x5,0x3E,0x0,0x0,0x80,0x80,0x80,0xC0,0xA0,0x7C,0x3E,0x5,0x3,0x1,0x1,0x1,0x0,0x0,0x7C,0xA0,0xC0,0x80,0x80,0x80,0x0,0x0},
     {0x0,0x0,0x0,0x0,0x0,0x3,0x7,0x7,0x0,0x0,0x0,0x0,0x0,0xC0,0xE0,0xE0,0x7,0x7,0x3,0x0,0x0,0x0,0x0,0x0,0xE0,0xE0,0xC0,0x0,0x0,0x0,0x0,0x0}
 };
-unsigned char playfield_tiles[7][4] = // Actual IDs in video memory
+unsigned char playfield_tiles[9][4] = // Actual IDs in video memory
 {
     {128,129,130,131},
     {132,133,134,135},
@@ -37,7 +39,9 @@ unsigned char playfield_tiles[7][4] = // Actual IDs in video memory
     {140,141,142,143},
     {144,145,146,147},
     {148,149,150,151},
-    {152,153,154,155}   // ID 6 is a buffer for a shown cursor - never drawn by playfield_draw, only by cursor_show()
+    {152,153,154,155},   // ID 6 is a buffer for a shown cursor - never drawn by playfield_draw, only by cursor_show()
+    {156,157,158,159},   // ID 7 is DROP start buffer
+    {160,161,162,163}    // ID 8 is DROP end buffer
 };
 
 unsigned char cursor_border[]={ 0x3F,0x40,0x80,0x80,0x80,0x80,0x80,0x80,0xFC,0x2,0x1,0x1,0x1,0x1,0x1,0x1,0x80,0x80,0x80,0x80,0x80,0x80,0x40,0x3F,0x1,0x1,0x1,0x1,0x1,0x1,0x2,0xFC};
@@ -161,13 +165,12 @@ void playfield_drawtile(uint8_t x, uint8_t y, uint8_t tileid)
 }
 void playfield_draw()
 {
-    uint8_t x,y,tileid;
+    uint8_t x,y;
 
     for(y = 0; y < FIELDHEIGHT; y++)
     {
         for(x = 0; x < FIELDWIDTH; x++)
         {
-            //playfield_drawtile(PLAYFIELD_STARTX+(2*x),PLAYFIELD_STARTY+(2*y),playfield[x][y]);
             playfield_drawtile(x,y,playfield[x][y]);
         }
     } 
@@ -258,7 +261,6 @@ void playfield_implode_cycle()
             playfield_markempty(tempx, tempy);
             // GUI implode
             playfield_gui_implode(tempx, tempy);
-            con_getc();
             // Now collapse the field to fill implosion. Collapse will push/trigger additional checks in the queue
             playfield_collapse();
             playfield_draw();
@@ -342,10 +344,87 @@ void playfield_gui_implode(uint8_t x, uint8_t y)
     playfield_draw(); 
 }
 
+void playfield_tiledrop(uint8_t x, uint8_t yfrom, uint8_t tileid)
+{
+    // drop ONE place down and ANIMATE DROP
+    chardefs *ptr = (chardefs *)0xf000; // start of video character definitions
+    uint8_t n,i,b;
+    uint8_t (*p)[32];
+    uint16_t timer;
+    uint8_t tshift1, tshift2;
+
+    p = playfield_tiledefs;
+
+    for(i = 0; i < 4; i++)
+    {
+        n = 7; // copy tileID data to DROP start buffer
+        memcpy((void *)ptr[(playfield_tiles[n][i])], *(p + tileid) + i*8, 8);
+        n = 8; // DROP end buffer will be 'empty' tile
+        memcpy((void *)ptr[(playfield_tiles[n][i])], *(p + 0) + i*8, 8);
+    }
+
+    // start displaying the buffers on screen
+    playfield_drawtile(x, yfrom, 7);
+    playfield_drawtile(x, yfrom+1, 8);
+
+    // new
+    for(i = 0; i < 8; i++)
+    {
+        ptr[playfield_tiles[8][0]][0] = ptr[playfield_tiles[7][2]][7];
+        ptr[playfield_tiles[8][1]][0] = ptr[playfield_tiles[7][3]][7];
+        tshift1 = ptr[playfield_tiles[7][0]][7];
+        tshift2 = ptr[playfield_tiles[7][1]][7];
+        for(b = 7; b > 0; b--)
+        {
+            ptr[playfield_tiles[8][0]][b] = ptr[playfield_tiles[8][0]][b-1];
+            ptr[playfield_tiles[8][1]][b] = ptr[playfield_tiles[8][1]][b-1];
+            ptr[playfield_tiles[7][0]][b] = ptr[playfield_tiles[7][0]][b-1];
+            ptr[playfield_tiles[7][1]][b] = ptr[playfield_tiles[7][1]][b-1];
+            ptr[playfield_tiles[7][2]][b] = ptr[playfield_tiles[7][2]][b-1];
+            ptr[playfield_tiles[7][3]][b] = ptr[playfield_tiles[7][3]][b-1];
+        }
+        ptr[playfield_tiles[7][2]][0] = tshift1;
+        ptr[playfield_tiles[7][3]][0] = tshift2;
+        ptr[playfield_tiles[7][0]][0] = 0;
+        ptr[playfield_tiles[7][1]][0] = 0;
+
+        timer=TIMERDELAY;
+        while(timer--);        
+    }
+    for(i = 0; i < 8; i++)
+    {
+        ptr[playfield_tiles[8][2]][0] = ptr[playfield_tiles[8][0]][7];
+        ptr[playfield_tiles[8][3]][0] = ptr[playfield_tiles[8][1]][7];
+        tshift1 = ptr[playfield_tiles[7][2]][7];
+        tshift2 = ptr[playfield_tiles[7][3]][7];
+        for(b = 7; b > 0; b--)
+        {
+            ptr[playfield_tiles[8][0]][b] = ptr[playfield_tiles[8][0]][b-1];
+            ptr[playfield_tiles[8][1]][b] = ptr[playfield_tiles[8][1]][b-1];
+            ptr[playfield_tiles[8][2]][b] = ptr[playfield_tiles[8][2]][b-1];
+            ptr[playfield_tiles[8][3]][b] = ptr[playfield_tiles[8][3]][b-1];
+            ptr[playfield_tiles[7][2]][b] = ptr[playfield_tiles[7][2]][b-1];
+            ptr[playfield_tiles[7][3]][b] = ptr[playfield_tiles[7][3]][b-1];
+        }
+        ptr[playfield_tiles[8][0]][0] = tshift1;
+        ptr[playfield_tiles[8][1]][0] = tshift2;
+        ptr[playfield_tiles[7][2]][0] = 0;
+        ptr[playfield_tiles[7][3]][0] = 0;
+
+        timer=TIMERDELAY;
+        while(timer--);        
+    }
+
+    // stop displaying the buffers on screen
+    playfield_drawtile(x, yfrom, 0); //empty tile
+    playfield_drawtile(x, yfrom+1, tileid); // the original tile that was dropped there
+}
 void playfield_collapse()
 {
     // check horizontal missing table, drop # of missing items in each column
     uint8_t x,y,yt,n;
+    uint8_t ydrop;
+    uint8_t tileid;
 
     for(x = 0; x < FIELDWIDTH; x++)
     {
@@ -363,10 +442,17 @@ void playfield_collapse()
                 yt = y - n; // top of the ceiling
                 while(1) 
                 {
-                    playfield[x][y] = playfield[x][yt]; // swap with immediate top neighbor
+                    tileid = playfield[x][yt];  // swap with immediate top neigbor
+                    playfield[x][y] = tileid;
                     queue_push(x,y);                    // record change to this location, needs check later
                     // later on, need to display this change
                     // display
+                    ydrop = yt;
+                    while(ydrop < y)    // start GUI drop, one at a time
+                    {
+                        playfield_tiledrop(x,ydrop,tileid); 
+                        ydrop++;
+                    }
                     // delay() etc
                     // display, something
                     y--;
@@ -378,9 +464,15 @@ void playfield_collapse()
             // now fill new entries from the top
             while(n)
             {
-                playfield[x][y] = random_get();
+                tileid = random_get();
+                playfield[x][y] = tileid;
                 queue_push(x,y);
-                // later on, need to display this change
+                ydrop = 0;
+                while(ydrop < y)
+                {
+                    playfield_tiledrop(x, ydrop,tileid);
+                    ydrop++;
+                }
                 y--;
                 n--;
             }            
@@ -396,7 +488,7 @@ void draw_borders()
 void display_swap_message(bool swap)
 {
     // stub code for now
-    con_gotoxy(0,22);
+    con_gotoxy(0,28);
     if(swap) con_puts("Select direction to swap");
     else     con_puts("ENTER to start swap mode");
 
@@ -438,7 +530,7 @@ void cursor_show_old()
     con_gotoxy(PLAYFIELD_STARTX+playfield_cursorx, PLAYFIELD_STARTY+playfield_cursory);
     con_putc(o);
 }
-void cursor_hide_()
+void cursor_hide_old()
 {
     // for now, just normalize the current position
     char o;
