@@ -105,6 +105,46 @@ int main()
     con_init();
 
     draw_borders();
+    playfield_init_tiles();
+    con_gotoxy(0,0);
+    con_putc(128);
+    con_putc(129);
+    con_gotoxy(0,1);
+    con_putc(130);
+    con_putc(131);
+    con_gotoxy(1,2);
+    con_putc(132);
+    con_putc(133);
+    con_gotoxy(1,3);
+    con_putc(134);
+    con_putc(135);
+    con_gotoxy(2,4);
+    con_putc(136);
+    con_putc(137);
+    con_gotoxy(2,5);
+    con_putc(138);
+    con_putc(139);
+    con_gotoxy(3,6);
+    con_putc(140);
+    con_putc(141);
+    con_gotoxy(3,7);
+    con_putc(142);
+    con_putc(143);
+    con_gotoxy(4,8);
+    con_putc(144);
+    con_putc(145);
+    con_gotoxy(4,9);
+    con_putc(146);
+    con_putc(147);
+    con_gotoxy(5,10);
+    con_putc(148);
+    con_putc(149);
+    con_gotoxy(5,11);
+    con_putc(150);
+    con_putc(151);
+    while(1);
+
+
     playfield_init();
     playfield_draw();
     cursor_show();

@@ -28,4 +28,5 @@ void playfield_implode_cycle();                     // internal function - all t
 void playfield_markempty(uint8_t x, uint8_t y);
 void playfield_gui_implode(uint8_t x, uint8_t y);           // internal function
 void playfield_collapse();                          // internal function - will trigger additional push of checks to the queue
+void playfield_init_tiles();
 #endif
