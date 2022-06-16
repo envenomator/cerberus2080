@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #define FIELDWIDTH 10
-#define FIELDHEIGHT 5
+#define FIELDHEIGHT 7
 #define PLAYFIELD_STARTX    10
 #define PLAYFIELD_STARTY    5
 

@@ -12,8 +12,16 @@
 // 1 - star
 // 2 - circle
 // 3 - square
-// 4 - triangle
+// 4 - plus
 // 5 - dot
+// 6 - cross
+// 7 - cursor ID
+// 8 - buffer from
+// 9 - buffer to
+
+#define CURSOR_ID       7
+#define BUFFERFROM_ID   8
+#define BUFFERTO_ID     9
 
 uint8_t playfield[FIELDWIDTH][FIELDHEIGHT];     // the actual playfield with IDs in a 2D grid
 uint8_t playfield_cursorx;                      // Cursor X position
@@ -22,17 +30,19 @@ uint8_t playfield_missing[FIELDWIDTH];          // Horizontal drop-check after i
 
 #define TIMERDELAY  200
 #define TIMERDELAY2 4000
+#define NRTILES     7
 
-unsigned char playfield_tiledefs[6][32] =
+unsigned char playfield_tiledefs[7][32] =
 {
     {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0},
     {0x0,0x0,0x1,0x19,0x1D,0xF,0x7,0x3E,0x0,0x0,0x80,0x98,0xB8,0xF0,0xE0,0x7C,0x3E,0x7,0xF,0x1D,0x19,0x1,0x0,0x0,0x7C,0xE0,0xF0,0xB8,0x98,0x80,0x0,0x0},
     {0x0,0x0,0x3,0xE,0x18,0x10,0x30,0x20,0x0,0x0,0xC0,0x70,0x18,0x8,0xC,0x4,0x20,0x30,0x10,0x18,0xE,0x3,0x0,0x0,0x4,0xC,0x8,0x18,0x70,0xC0,0x0,0x0},
     {0x0,0x0,0x0,0x1F,0x1F,0x1F,0x1C,0x1C,0x0,0x0,0x0,0xF8,0xF8,0xF8,0x38,0x38,0x1C,0x1C,0x1F,0x1F,0x1F,0x0,0x0,0x0,0x38,0x38,0xF8,0xF8,0xF8,0x0,0x0,0x0},
-    {0x0,0x0,0x1,0x1,0x1,0x3,0x5,0x3E,0x0,0x0,0x80,0x80,0x80,0xC0,0xA0,0x7C,0x3E,0x5,0x3,0x1,0x1,0x1,0x0,0x0,0x7C,0xA0,0xC0,0x80,0x80,0x80,0x0,0x0},
-    {0x0,0x0,0x0,0x0,0x0,0x3,0x7,0x7,0x0,0x0,0x0,0x0,0x0,0xC0,0xE0,0xE0,0x7,0x7,0x3,0x0,0x0,0x0,0x0,0x0,0xE0,0xE0,0xC0,0x0,0x0,0x0,0x0,0x0}
+    {0x0,0x0,0x1,0x1,0x1,0x1,0x1,0x3F,0x0,0x0,0x80,0x80,0x80,0x80,0x80,0xFC,0x3F,0x1,0x1,0x1,0x1,0x1,0x0,0x0,0xFC,0x80,0x80,0x80,0x80,0x80,0x0,0x0},
+    {0x0,0x0,0x0,0x0,0x0,0x3,0x7,0x7,0x0,0x0,0x0,0x0,0x0,0xC0,0xE0,0xE0,0x7,0x7,0x3,0x0,0x0,0x0,0x0,0x0,0xE0,0xE0,0xC0,0x0,0x0,0x0,0x0,0x0},
+    {0x0,0x0,0x0,0x18,0x1C,0xE,0x7,0x3,0x0,0x0,0x0,0x18,0x38,0x70,0xE0,0xC0,0x3,0x7,0xE,0x1C,0x18,0x0,0x0,0x0,0xC0,0xE0,0x70,0x38,0x18,0x0,0x0,0x0}
 };
-unsigned char playfield_tiles[9][4] = // Actual IDs in video memory
+unsigned char playfield_tiles[10][4] = // Actual IDs in video memory
 {
     {128,129,130,131},
     {132,133,134,135},
@@ -40,9 +50,10 @@ unsigned char playfield_tiles[9][4] = // Actual IDs in video memory
     {140,141,142,143},
     {144,145,146,147},
     {148,149,150,151},
-    {152,153,154,155},   // ID 6 is a buffer for a shown cursor - never drawn by playfield_draw, only by cursor_show()
-    {156,157,158,159},   // ID 7 is DROP start buffer
-    {160,161,162,163}    // ID 8 is DROP end buffer
+    {152,153,154,155},
+    {156,157,158,159},   // ID 7 is a buffer for a shown cursor - never drawn by playfield_draw, only by cursor_show()
+    {160,161,162,163},   // ID 8 is DROP start buffer
+    {164,165,166,167}    // ID 9 is DROP end buffer
 };
 
 unsigned char cursor_border[]={ 0x3F,0x40,0x80,0x80,0x80,0x80,0x80,0x80,0xFC,0x2,0x1,0x1,0x1,0x1,0x1,0x1,0x80,0x80,0x80,0x80,0x80,0x80,0x40,0x3F,0x1,0x1,0x1,0x1,0x1,0x1,0x2,0xFC};
@@ -56,7 +67,7 @@ void playfield_init_tiles()
 
     p = playfield_tiledefs;
 
-    for(n = 0; n < 6; n++)
+    for(n = 0; n < NRTILES; n++)
     {
         for(i = 0; i < 4; i++)
         {
@@ -83,7 +94,7 @@ void playfield_init_empty()
 
 void playfield_init()
 {
-    uint8_t data[] = {1,2,2,1,5,5,1,2,3,1,2,5,1,1,2,1,3,1,5,1,1,5,3,2,1,4,1,2,1,4,2,1,1,2,1,3,2,1,3,1,1,3,5,1,5,5,1,3,1,4};
+    uint8_t data[] = {1,2,2,1,5,5,1,2,3,1,2,5,6,1,2,1,3,1,5,1,1,5,3,2,1,4,1,2,1,4,2,1,6,2,1,3,2,6,3,1,1,3,5,1,5,5,1,3,1,4,4,1,2,3,6,1,4,2,4,2,3,4,1,5,4,5,1,5,2,1};
     uint8_t x,y,n;
 
     n = 0;
@@ -390,59 +401,59 @@ void playfield_tiledrop(uint8_t x, uint8_t yfrom, uint8_t tileid)
 
     for(i = 0; i < 4; i++)
     {
-        n = 7; // copy tileID data to DROP start buffer
+        n = BUFFERFROM_ID; // copy tileID data to DROP start buffer
         memcpy((void *)ptr[(playfield_tiles[n][i])], *(p + tileid) + i*8, 8);
-        n = 8; // DROP end buffer will be 'empty' tile
+        n = BUFFERTO_ID; // DROP end buffer will be 'empty' tile
         memcpy((void *)ptr[(playfield_tiles[n][i])], *(p + 0) + i*8, 8);
     }
 
     // start displaying the buffers on screen
-    playfield_drawtile(x, yfrom, 7);
-    playfield_drawtile(x, yfrom+1, 8);
+    playfield_drawtile(x, yfrom, BUFFERFROM_ID);
+    playfield_drawtile(x, yfrom+1, BUFFERTO_ID);
 
     // new
     for(i = 0; i < 8; i++)
     {
-        ptr[playfield_tiles[8][0]][0] = ptr[playfield_tiles[7][2]][7];
-        ptr[playfield_tiles[8][1]][0] = ptr[playfield_tiles[7][3]][7];
-        tshift1 = ptr[playfield_tiles[7][0]][7];
-        tshift2 = ptr[playfield_tiles[7][1]][7];
+        ptr[playfield_tiles[BUFFERTO_ID][0]][0] = ptr[playfield_tiles[BUFFERFROM_ID][2]][7];
+        ptr[playfield_tiles[BUFFERTO_ID][1]][0] = ptr[playfield_tiles[BUFFERFROM_ID][3]][7];
+        tshift1 = ptr[playfield_tiles[BUFFERFROM_ID][0]][7];
+        tshift2 = ptr[playfield_tiles[BUFFERFROM_ID][1]][7];
         for(b = 7; b > 0; b--)
         {
-            ptr[playfield_tiles[8][0]][b] = ptr[playfield_tiles[8][0]][b-1];
-            ptr[playfield_tiles[8][1]][b] = ptr[playfield_tiles[8][1]][b-1];
-            ptr[playfield_tiles[7][0]][b] = ptr[playfield_tiles[7][0]][b-1];
-            ptr[playfield_tiles[7][1]][b] = ptr[playfield_tiles[7][1]][b-1];
-            ptr[playfield_tiles[7][2]][b] = ptr[playfield_tiles[7][2]][b-1];
-            ptr[playfield_tiles[7][3]][b] = ptr[playfield_tiles[7][3]][b-1];
+            ptr[playfield_tiles[BUFFERTO_ID][0]][b] = ptr[playfield_tiles[BUFFERTO_ID][0]][b-1];
+            ptr[playfield_tiles[BUFFERTO_ID][1]][b] = ptr[playfield_tiles[BUFFERTO_ID][1]][b-1];
+            ptr[playfield_tiles[BUFFERFROM_ID][0]][b] = ptr[playfield_tiles[BUFFERFROM_ID][0]][b-1];
+            ptr[playfield_tiles[BUFFERFROM_ID][1]][b] = ptr[playfield_tiles[BUFFERFROM_ID][1]][b-1];
+            ptr[playfield_tiles[BUFFERFROM_ID][2]][b] = ptr[playfield_tiles[BUFFERFROM_ID][2]][b-1];
+            ptr[playfield_tiles[BUFFERFROM_ID][3]][b] = ptr[playfield_tiles[BUFFERFROM_ID][3]][b-1];
         }
-        ptr[playfield_tiles[7][2]][0] = tshift1;
-        ptr[playfield_tiles[7][3]][0] = tshift2;
-        ptr[playfield_tiles[7][0]][0] = 0;
-        ptr[playfield_tiles[7][1]][0] = 0;
+        ptr[playfield_tiles[BUFFERFROM_ID][2]][0] = tshift1;
+        ptr[playfield_tiles[BUFFERFROM_ID][3]][0] = tshift2;
+        ptr[playfield_tiles[BUFFERFROM_ID][0]][0] = 0;
+        ptr[playfield_tiles[BUFFERFROM_ID][1]][0] = 0;
 
         timer=TIMERDELAY;
         while(timer--);        
     }
     for(i = 0; i < 8; i++)
     {
-        ptr[playfield_tiles[8][2]][0] = ptr[playfield_tiles[8][0]][7];
-        ptr[playfield_tiles[8][3]][0] = ptr[playfield_tiles[8][1]][7];
-        tshift1 = ptr[playfield_tiles[7][2]][7];
-        tshift2 = ptr[playfield_tiles[7][3]][7];
+        ptr[playfield_tiles[BUFFERTO_ID][2]][0] = ptr[playfield_tiles[BUFFERTO_ID][0]][7];
+        ptr[playfield_tiles[BUFFERTO_ID][3]][0] = ptr[playfield_tiles[BUFFERTO_ID][1]][7];
+        tshift1 = ptr[playfield_tiles[BUFFERFROM_ID][2]][7];
+        tshift2 = ptr[playfield_tiles[BUFFERFROM_ID][3]][7];
         for(b = 7; b > 0; b--)
         {
-            ptr[playfield_tiles[8][0]][b] = ptr[playfield_tiles[8][0]][b-1];
-            ptr[playfield_tiles[8][1]][b] = ptr[playfield_tiles[8][1]][b-1];
-            ptr[playfield_tiles[8][2]][b] = ptr[playfield_tiles[8][2]][b-1];
-            ptr[playfield_tiles[8][3]][b] = ptr[playfield_tiles[8][3]][b-1];
-            ptr[playfield_tiles[7][2]][b] = ptr[playfield_tiles[7][2]][b-1];
-            ptr[playfield_tiles[7][3]][b] = ptr[playfield_tiles[7][3]][b-1];
+            ptr[playfield_tiles[BUFFERTO_ID][0]][b] = ptr[playfield_tiles[BUFFERTO_ID][0]][b-1];
+            ptr[playfield_tiles[BUFFERTO_ID][1]][b] = ptr[playfield_tiles[BUFFERTO_ID][1]][b-1];
+            ptr[playfield_tiles[BUFFERTO_ID][2]][b] = ptr[playfield_tiles[BUFFERTO_ID][2]][b-1];
+            ptr[playfield_tiles[BUFFERTO_ID][3]][b] = ptr[playfield_tiles[BUFFERTO_ID][3]][b-1];
+            ptr[playfield_tiles[BUFFERFROM_ID][2]][b] = ptr[playfield_tiles[BUFFERFROM_ID][2]][b-1];
+            ptr[playfield_tiles[BUFFERFROM_ID][3]][b] = ptr[playfield_tiles[BUFFERFROM_ID][3]][b-1];
         }
-        ptr[playfield_tiles[8][0]][0] = tshift1;
-        ptr[playfield_tiles[8][1]][0] = tshift2;
-        ptr[playfield_tiles[7][2]][0] = 0;
-        ptr[playfield_tiles[7][3]][0] = 0;
+        ptr[playfield_tiles[BUFFERTO_ID][0]][0] = tshift1;
+        ptr[playfield_tiles[BUFFERTO_ID][1]][0] = tshift2;
+        ptr[playfield_tiles[BUFFERFROM_ID][2]][0] = 0;
+        ptr[playfield_tiles[BUFFERFROM_ID][3]][0] = 0;
 
         timer=TIMERDELAY;
         while(timer--);        
@@ -540,11 +551,11 @@ void cursor_show()
     {
         for(b = 0; b < 8; b++)
         {
-            ptr[playfield_tiles[6][i]][b] = ptr[playfield_tiles[tileid][i]][b] | *brd;
+            ptr[playfield_tiles[CURSOR_ID][i]][b] = ptr[playfield_tiles[tileid][i]][b] | *brd;
             brd++;
         }
     }
-    playfield_drawtile(playfield_cursorx, playfield_cursory, 6);
+    playfield_drawtile(playfield_cursorx, playfield_cursory, CURSOR_ID);
 }
 void cursor_hide()
 {
