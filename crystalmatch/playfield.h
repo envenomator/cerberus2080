@@ -6,8 +6,8 @@
 
 #define FIELDWIDTH 10
 #define FIELDHEIGHT 7
-#define PLAYFIELD_STARTX    10
-#define PLAYFIELD_STARTY    5
+#define PLAYFIELD_STARTX    1 
+#define PLAYFIELD_STARTY    6
 
 extern uint8_t playfield_cursorx;
 extern uint8_t playfield_cursory;

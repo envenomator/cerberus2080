@@ -8,149 +8,80 @@
 #include "queue.h"
 #include "playfield.h"
 
-// Function to swap two numbers
-void swap(char *x, char *y) {
-    char t = *x; *x = *y; *y = t;
-}
-
-// Function to reverse `buffer[i…j]`
-char* reverse(char *buffer, int i, int j)
-{
-    while (i < j) {
-        swap(&buffer[i++], &buffer[j--]);
-    }
-
-    return buffer;
-}
-
-// Iterative function to implement `itoa()` function in C
-char* itoa(int value, char* buffer, int base)
-{
-    // invalid input
-    if (base < 2 || base > 32) {
-        return buffer;
-    }
-
-    // consider the absolute value of the number
-    int n = abs(value);
-
-    int i = 0;
-    while (n)
-    {
-        int r = n % base;
-
-        if (r >= 10) {
-            buffer[i++] = 65 + (r - 10);
-        }
-        else {
-            buffer[i++] = 48 + r;
-        }
-
-        n = n / base;
-    }
-
-    // if the number is 0
-    if (i == 0) {
-        buffer[i++] = '0';
-    }
-
-    // If the base is 10 and the value is negative, the resulting string
-    // is preceded with a minus sign (-)
-    // With any other base, value is always considered unsigned
-    if (value < 0 && base == 10) {
-        buffer[i++] = '-';
-    }
-
-    buffer[i] = '\0'; // null terminate string
-
-    // reverse the string and return it
-    return reverse(buffer, 0, i - 1);
-}
-
-void print_cursorposition()
-{
-    char msg[40];
-
-    con_gotoxy(0,0);
-    con_puts("X:        ");
-    con_gotoxy(2,0);
-    itoa(playfield_cursorx, msg, 10);
-    con_puts(msg);
-    con_gotoxy(0,1);
-    con_puts("Y:        ");
-    con_gotoxy(2,1);
-    itoa(playfield_cursory, msg, 10);
-    con_puts(msg);
-}
-
-void print_sim(uint8_t number)
-{
-    char msg[40];
-
-    con_gotoxy(0,2);
-    con_puts("Sim:      ");
-    con_gotoxy(4,2);
-    itoa(number, msg, 10);
-    con_puts(msg);
-}
-
-
 int main()
 {
     bool swapstatus;
+    bool gameover;
+    bool playing = true;
     char key;
     swapstatus = false;
 
+    con_init();
     random_init();
     queue_init();
-    con_init();
-
-    draw_borders();
     playfield_init_tiles();
-    playfield_init();
-    playfield_draw();
-    cursor_show(swapstatus);
 
-    display_swap_message(swapstatus);
-    while(1)
+    while(playing)
     {
-        print_cursorposition();
-        //test = playfield_checkimplode(playfield_cursorx, playfield_cursory);
-        //print_sim(test);
+        gameover = false;
+        con_cls();
+        con_init_timer();
+        draw_borders();
+        playfield_init();
+        playfield_draw();
+        cursor_show(swapstatus);
 
-        key = con_getc();
-        switch(key)
+        display_swap_message(swapstatus);
+        while(!gameover)
         {
-            case KEY_ENTER:   // LF / ENTER
-                swapstatus = !swapstatus;
-                display_swap_message(swapstatus);
-                cursor_show(swapstatus);
-                break;
-            case 0x1b:
-                swapstatus = false;
-                display_swap_message(swapstatus);
-                cursor_show(swapstatus);
-                break;
-            case KEY_UP:
-            case KEY_DOWN:
-            case KEY_LEFT:
-            case KEY_RIGHT:
-                if(swapstatus)
-                {
-                    playfield_swap(key);
+            //print_cursorposition();
+            //test = playfield_checkimplode(playfield_cursorx, playfield_cursory);
+            //print_sim(test);
+
+            key = con_getc_timer(160);
+            switch(key)
+            {
+                case KEY_ENTER:   // LF / ENTER
+                    swapstatus = !swapstatus;
+                    display_swap_message(swapstatus);
+                    cursor_show(swapstatus);
+                    break;
+                case 0x1b:
                     swapstatus = false;
                     display_swap_message(swapstatus);
                     cursor_show(swapstatus);
-                }
-                else
-                {
-                    cursor_hide();
-                    cursor_move(key);
-                    cursor_show(swapstatus);
-                }
-                break;
-            default:
-                break;
+                    break;
+                case KEY_UP:
+                case KEY_DOWN:
+                case KEY_LEFT:
+                case KEY_RIGHT:
+                    if(swapstatus)
+                    {
+                        playfield_swap(key);
+                        swapstatus = false;
+                        display_swap_message(swapstatus);
+                        cursor_show(swapstatus);
+                    }
+                    else
+                    {
+                        cursor_hide();
+                        cursor_move(key);
+                        cursor_show(swapstatus);
+                    }
+                    break;
+                case 'Q':
+                    con_gotoxy(0,25);
+                    con_puts("GAME OVER");
+                    gameover = true;
+                    break;
+                default:
+                    break;
+            }
         }
+        con_gotoxy(10,25);
+        con_puts(" - New game? (Y/N)");
+        key = con_getc();
+        if(key == 'n' || key == 'N') playing = false;
     }
+    con_exit();
 }

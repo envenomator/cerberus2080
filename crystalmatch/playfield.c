@@ -526,6 +526,11 @@ void playfield_collapse()
 
 void draw_borders()
 {
+    con_gotoxy(23,7);
+    con_puts("  Time left: ");
+
+    con_gotoxy(23,11);
+    con_puts("Move points: ");
     return;
 }
 
