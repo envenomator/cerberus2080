@@ -21,7 +21,7 @@ void playfield_drawtile(uint8_t screenx, uint8_t screeny, uint8_t tileid);  // d
 void playfield_swap(char key);
 void draw_borders();
 void display_swap_message(bool swap);
-void cursor_show();
+void cursor_show(bool swapstatus);
 void cursor_hide();
 void cursor_move(char key);
 bool playfield_checkimplode(uint8_t x, uint8_t y);  // only check if a location NEEDS implosion, no actual work

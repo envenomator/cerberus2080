@@ -94,10 +94,12 @@ void print_sim(uint8_t number)
     con_puts(msg);
 }
 
+
 int main()
 {
+    bool swapstatus;
     char key;
-    bool swap = false;
+    swapstatus = false;
 
     random_init();
     queue_init();
@@ -107,9 +109,9 @@ int main()
     playfield_init_tiles();
     playfield_init();
     playfield_draw();
-    cursor_show();
+    cursor_show(swapstatus);
 
-    display_swap_message(swap);
+    display_swap_message(swapstatus);
     while(1)
     {
         print_cursorposition();
@@ -120,28 +122,31 @@ int main()
         switch(key)
         {
             case KEY_ENTER:   // LF / ENTER
-                swap = !swap;
-                display_swap_message(swap);
+                swapstatus = !swapstatus;
+                display_swap_message(swapstatus);
+                cursor_show(swapstatus);
                 break;
             case 0x1b:
-                swap = false;
-                display_swap_message(swap);
+                swapstatus = false;
+                display_swap_message(swapstatus);
+                cursor_show(swapstatus);
                 break;
             case KEY_UP:
             case KEY_DOWN:
             case KEY_LEFT:
             case KEY_RIGHT:
-                if(swap)
+                if(swapstatus)
                 {
                     playfield_swap(key);
-                    swap = false;
-                    display_swap_message(swap);
+                    swapstatus = false;
+                    display_swap_message(swapstatus);
+                    cursor_show(swapstatus);
                 }
                 else
                 {
                     cursor_hide();
                     cursor_move(key);
-                    cursor_show();
+                    cursor_show(swapstatus);
                 }
                 break;
             default:
