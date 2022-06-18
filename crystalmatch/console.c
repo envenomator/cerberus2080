@@ -14,10 +14,10 @@ void con_init()
     return;
 }
 
-void con_init_timer()
+void con_init_timer(uint8_t init)
 {
     con_timer_counter = 0;
-    con_timer_ms = 60;
+    con_timer_ms = init;
     return;
 }
 
@@ -169,7 +169,7 @@ void print_timer()
 {
     char msg[40];
     
-    con_gotoxy(35,7);
+    con_gotoxy(34,10);
     itoa(con_timer_ms, msg, 10);
     con_puts(msg);
 }   

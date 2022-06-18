@@ -32,4 +32,5 @@ void playfield_collapse();                          // internal function - will 
 void playfield_init_tiles();
 void playfield_display_addpoints(uint8_t points);
 void playfield_display_points();
+void playfield_display_gameover();
 #endif

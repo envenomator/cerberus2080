@@ -10,9 +10,10 @@
 
 int main()
 {
-    bool swapstatus = false;
+    bool swapstatus;
     bool gameover = false;
     bool playing = true;
+    bool choice;
     char key;
     uint16_t totalpoints = 0;
 
@@ -23,9 +24,10 @@ int main()
 
     while(playing)
     {
+        swapstatus = false;
         gameover = false;
         con_cls();              // clear screen
-        con_init_timer();       // reset timer for this game
+        con_init_timer(120);       // reset timer for this game
         draw_borders();         
         playfield_init();
         playfield_draw();
@@ -34,7 +36,7 @@ int main()
         display_swap_message(swapstatus);
         while(!gameover)
         {
-            key = con_getc_timer(500);
+            key = con_getc_timer(750);
             switch(key)
             {
                 case KEY_ENTER:   // LF / ENTER
@@ -66,18 +68,31 @@ int main()
                     }
                     break;
                 case 'Q':
-                    con_gotoxy(0,25);
-                    con_puts("GAME OVER");
                     gameover = true;
                     break;
                 default:
                     break;
             }
         }
-        con_gotoxy(10,25);
-        con_puts(" - New game? (Y/N)");
-        key = con_getc();
-        if(key == 'n' || key == 'N') playing = false;
+        // end of game - ask for new game or quit
+        playfield_display_gameover();
+
+        choice = false;
+        while(!choice)
+        {
+            key = con_getc();
+            switch(key)
+            {
+                case 'y':
+                    choice = true;
+                    playing = true;
+                    break;
+                case 'n':
+                    choice = true;
+                    playing = false;
+                    break;
+            }
+        }
     }
     con_exit();
 }
