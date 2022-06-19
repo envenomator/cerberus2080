@@ -28,12 +28,12 @@ int main()
         gameover = false;
         con_cls();              // clear screen
         con_init_timer(120);       // reset timer for this game
-        draw_borders();         
+        playfield_draw_borders();         
         playfield_init();
         playfield_draw();
-        cursor_show(swapstatus);
+        playfield_cursor_show(swapstatus);
 
-        display_swap_message(swapstatus);
+        playfield_display_swap_message(swapstatus);
         while(!gameover)
         {
             key = con_getc_timer(750);
@@ -41,13 +41,13 @@ int main()
             {
                 case KEY_ENTER:   // LF / ENTER
                     swapstatus = !swapstatus;
-                    display_swap_message(swapstatus);
-                    cursor_show(swapstatus);
+                    playfield_display_swap_message(swapstatus);
+                    playfield_cursor_show(swapstatus);
                     break;
                 case 0x1b:
                     swapstatus = false;
-                    display_swap_message(swapstatus);
-                    cursor_show(swapstatus);
+                    playfield_display_swap_message(swapstatus);
+                    playfield_cursor_show(swapstatus);
                     break;
                 case KEY_UP:
                 case KEY_DOWN:
@@ -57,14 +57,14 @@ int main()
                     {
                         playfield_swap(key);
                         swapstatus = false;
-                        display_swap_message(swapstatus);
-                        cursor_show(swapstatus);
+                        playfield_display_swap_message(swapstatus);
+                        playfield_cursor_show(swapstatus);
                     }
                     else
                     {
-                        cursor_hide();
-                        cursor_move(key);
-                        cursor_show(swapstatus);
+                        playfield_cursor_hide();
+                        playfield_cursor_move(key);
+                        playfield_cursor_show(swapstatus);
                     }
                     break;
                 case 'Q':

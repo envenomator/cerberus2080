@@ -29,7 +29,8 @@ void con_putc(char c);
 void con_puts(const char *s);
 char con_getc();                                        // blocked wait
 char con_getc_timer(uint16_t threshold);                // blocket wait with timer and threshold
-char* itoa(int value, char* buffer, int base);          // itoa tool. right-aligns with %3d
+char* con_itoa(int value, char* buffer, int base);          // itoa tool. right-aligns with %3d
 void con_exit();
+void con_print_timer();
 
 #endif

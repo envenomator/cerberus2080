@@ -55,8 +55,6 @@ void con_puts(const char *s)
     return;
 }
 
-void print_timer();
-
 char con_getc_timer(uint16_t threshold)
 {
     while(*(BIOS_OUTBOXFLAG) == 0)
@@ -69,12 +67,12 @@ char con_getc_timer(uint16_t threshold)
             if(con_timer_ms == 0)
             {
                 con_timer_ms = 0;
-                print_timer();
+                con_print_timer();
                 *(BIOS_OUTBOXDATA) = 'Q';
                 break;
             }
         }
-        print_timer();
+        con_print_timer();
     } // blocked wait for the mailbox flag
     *(BIOS_OUTBOXFLAG) = 0;         // acknowlege reception
     return *(BIOS_OUTBOXDATA);      // return the data slot
@@ -108,7 +106,7 @@ char* reverse(char *buffer, int i, int j)
 }
 
 // Iterative function to implement `itoa()` function in C
-char* itoa(int value, char* buffer, int base)
+char* con_itoa(int value, char* buffer, int base)
 {
     // invalid input
     if (base < 2 || base > 32) {
@@ -165,11 +163,11 @@ char* itoa(int value, char* buffer, int base)
     return reverse(buffer, 0, i - 1);
 }
 
-void print_timer()
+void con_print_timer()
 {
     char msg[40];
     
     con_gotoxy(34,10);
-    itoa(con_timer_ms, msg, 10);
+    con_itoa(con_timer_ms, msg, 10);
     con_puts(msg);
 }   
