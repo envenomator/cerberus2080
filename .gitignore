@@ -1,5 +1,4 @@
 *.o
-*.bin
 /build/
 *.lst
 *.sym
