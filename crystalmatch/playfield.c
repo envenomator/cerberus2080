@@ -41,14 +41,15 @@
 #define ID_BR           11
 #define ID_BL           12
 
+// delays used during animations
+#define TIMERDELAY  200
+#define TIMERDELAY2 4000
+
 uint8_t playfield[FIELDWIDTH][FIELDHEIGHT];     // the actual playfield with IDs in a 2D grid
 uint8_t playfield_cursorx;                      // Cursor X position
 uint8_t playfield_cursory;                      // Cursor Y position
 uint8_t playfield_missing[FIELDWIDTH];          // Horizontal drop-check after implosions. Each items contains #items to drop in that column
 uint16_t playfield_totalpoints;
-
-#define TIMERDELAY  200
-#define TIMERDELAY2 4000
 
 unsigned char playfield_tiledefs[NRTILES][32] =
 {
@@ -68,9 +69,8 @@ unsigned char playfield_tiledefs[NRTILES][32] =
 };
 unsigned char playfield_tiles[NRTILES + NRTEMPTILES][4]; // Actual IDs in video memory - need definition in software
 
-unsigned char cursor_border[]={ 0x3F,0x40,0x80,0x80,0x80,0x80,0x80,0x80,0xFC,0x2,0x1,0x1,0x1,0x1,0x1,0x1,0x80,0x80,0x80,0x80,0x80,0x80,0x40,0x3F,0x1,0x1,0x1,0x1,0x1,0x1,0x2,0xFC};
-unsigned char cursor_border_swapped[]={ 0x26,0x40,0x80,0x0,0x0,0x80,0x80,0x0,0x64,0x2,0x1,0x0,0x0,0x1,0x1,0x0,0x0,0x80,0x80,0x0,0x0,0x80,0x40,0x26,0x0,0x1,0x1,0x0,0x0,0x1,0x2,0x64};
-unsigned char cursor_mask[]={ 0x0,0x3F,0x7F,0x7F,0x7F,0x7F,0x7F,0x7F,0x0,0xFC,0xFE,0xFE,0xFE,0xFE,0xFE,0xFE,0x7F,0x7F,0x7F,0x7F,0x7F,0x7F,0x3F,0x0,0xFE,0xFE,0xFE,0xFE,0xFE,0xFE,0xFC,0x0};
+unsigned char cursor_border[]={0x3F,0x40,0x80,0x80,0x80,0x80,0x80,0x80,0xFC,0x2,0x1,0x1,0x1,0x1,0x1,0x1,0x80,0x80,0x80,0x80,0x80,0x80,0x40,0x3F,0x1,0x1,0x1,0x1,0x1,0x1,0x2,0xFC};
+unsigned char cursor_border_swapped[]={0x26,0x40,0x80,0x0,0x0,0x80,0x80,0x0,0x64,0x2,0x1,0x0,0x0,0x1,0x1,0x0,0x0,0x80,0x80,0x0,0x0,0x80,0x40,0x26,0x0,0x1,0x1,0x0,0x0,0x1,0x2,0x64};
 
 void playfield_init_tiles()
 {
@@ -98,24 +98,6 @@ void playfield_init_tiles()
         }
     }
 }
-void playfield_init_empty()
-{
-    // start out with an empty playfield
-    uint8_t x, y;
-    for(x = 0; x < FIELDWIDTH; x++)
-    {
-        for(y = 0; y < FIELDHEIGHT; y++)
-        {
-            playfield[x][y] = 1; // empty ID
-        }
-    }
-
-    // position cursor +/- in the middle for starters
-    playfield_cursorx = FIELDWIDTH/2;
-    playfield_cursory = FIELDHEIGHT/2;
-
-    playfield_totalpoints = 0;
-}
 
 void playfield_init()
 {
@@ -137,59 +119,10 @@ void playfield_init()
     playfield_totalpoints = 0;
 }
 
-void playfield_init_random()
-{
-    uint8_t x, y;
-    for(x = 0; x < FIELDWIDTH; x++)
-    {
-        for(y = 0; y < FIELDHEIGHT; y++)
-        {
-            playfield[x][y] = random_get();
-        }
-    }
-
-    // cursor +/- in the middle
-    playfield_cursorx = FIELDWIDTH/2;
-    playfield_cursory = FIELDHEIGHT/2;
-}
-void playfield_load()
-{
-    // stub
-    playfield_init();
-}
-char playfield_getchar(uint8_t id)
-{
-    char o;
-    switch(id)
-    {
-        case 0:
-            o = ' ';
-            break;
-        case 1:
-            o = '*';
-            break;
-        case 2:
-            o = 'O';
-            break;
-        case 3:
-            o = '#';
-            break;
-        case 4:
-            o = '^';
-            break;
-        case 5:
-            o = '.';
-            break;
-        default:
-            o = 'U';
-            break;
-    }
-    return o;
-}
 void playfield_drawtile(uint8_t x, uint8_t y, uint8_t tileid)
 {
     // Draw tileID on PLAYFIELD coordinate on screen
-    // tileid is 0..5
+    // tileid is 0..NRTILES-1
     uint8_t screenx, screeny;
 
     screenx = PLAYFIELD_STARTX + (x << 1);
@@ -204,6 +137,7 @@ void playfield_drawtile(uint8_t x, uint8_t y, uint8_t tileid)
 }
 void playfield_draw()
 {
+    // Draw the entire playfield and display current points
     uint8_t x,y;
 
     for(y = 0; y < FIELDHEIGHT; y++)
@@ -215,24 +149,9 @@ void playfield_draw()
     } 
     playfield_display_points();
 }
-void playfield_draw_old()
-{
-    uint8_t x,y;
-    char o;
-
-    for(y = 0; y < FIELDHEIGHT; y++)
-    {
-        for(x = 0; x < FIELDWIDTH; x++)
-        {
-            con_gotoxy(PLAYFIELD_STARTX+x,PLAYFIELD_STARTY+y);
-            o = playfield_getchar(playfield[x][y]);
-            con_putc(o);
-        }
-    } 
-    return;
-}
 void playfield_swap(char key)
 {
+    // Swap current cursor position with given direction in 'key' variable
     uint8_t tempid;
     uint8_t tempx = 0, tempy = 0;
     tempid = playfield[playfield_cursorx][playfield_cursory]; // record current location ID
@@ -287,6 +206,7 @@ void playfield_swap(char key)
 
 void playfield_implode_cycle()
 {
+    // Run through all items that need checking for collapses, currently in the queue
     uint8_t tempx, tempy, tileid;
     uint8_t points;
 
@@ -389,6 +309,8 @@ uint8_t playfield_markempty(uint8_t x, uint8_t y)
 
 void playfield_gui_implode(uint8_t tileid)
 {
+    // animate the implosion on screen
+    // given tileid is needed to flash on-screen
     chardefs *ptr = (chardefs *)0xf000; // start of video character definitions
     uint8_t i,b,n;
     uint16_t timer;
@@ -426,7 +348,7 @@ void playfield_gui_implode(uint8_t tileid)
 
 void playfield_tiledrop(uint8_t x, uint8_t yfrom, uint8_t tileid)
 {
-    // drop ONE place down and ANIMATE DROP
+    // drop ONE place down and ANIMATE DROP on screen
     chardefs *ptr = (chardefs *)0xf000; // start of video character definitions
     uint8_t n,i,b;
     uint8_t (*p)[32];
@@ -502,6 +424,7 @@ void playfield_tiledrop(uint8_t x, uint8_t yfrom, uint8_t tileid)
 void playfield_collapse()
 {
     // check horizontal missing table, drop # of missing items in each column
+    // not shown on screen with this method directly, but calls on playfield_tiledrop(...) to show each drop
     uint8_t x,y,yt,n;
     uint8_t ydrop;
     uint8_t tileid;
@@ -562,6 +485,7 @@ void playfield_collapse()
 
 void playfield_draw_borders()
 {
+    // lipstick around the playfield
     con_gotoxy(5,2);
     con_puts("Crystal MATCH");
     con_gotoxy(21,10);
@@ -579,12 +503,12 @@ void playfield_draw_borders()
     con_gotoxy(4,24);
     con_putc(0x11);//down
 
-
     return;
 }
 
 void playfield_display_addpoints(uint8_t points)
 {
+    // adds points to the total score
     playfield_totalpoints += points;
 
     playfield_display_points();
@@ -602,8 +526,6 @@ void playfield_display_points()
 }
 void playfield_display_swap_message(bool swap)
 {
-    // stub code for now
-    con_gotoxy(9,23);
     if(swap)
     {
         con_gotoxy(7,23);
@@ -623,6 +545,8 @@ void playfield_display_swap_message(bool swap)
 
 void playfield_cursor_show(bool swapstatus)
 {
+    // shows the cursor in the playfield
+    // if swapstatus is true: bordered cursor, otherwise a normal cursor is shown
     uint8_t tileid = playfield[playfield_cursorx][playfield_cursory];
     chardefs *ptr = (chardefs *)0xf000; // start of video character definitions
     uint8_t i,b;
@@ -631,7 +555,7 @@ void playfield_cursor_show(bool swapstatus)
     if(swapstatus) brd = cursor_border_swapped;
     else brd = cursor_border;
 
-    // prepare tile ID 6 as buffer for this 'cursor' location
+    // prepare tile ID as buffer for this 'cursor' location
     for(i = 0; i < 4; i++)
     {
         for(b = 0; b < 8; b++)
@@ -644,6 +568,7 @@ void playfield_cursor_show(bool swapstatus)
 }
 void playfield_cursor_hide()
 {
+    // hide the cursor from the playfield
     uint8_t tileid = playfield[playfield_cursorx][playfield_cursory];
 
     playfield_drawtile(playfield_cursorx, playfield_cursory, tileid);

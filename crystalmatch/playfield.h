@@ -13,9 +13,6 @@ extern uint8_t playfield_cursorx;
 extern uint8_t playfield_cursory;
 
 void playfield_init();
-void playfield_init_random();
-void playfield_load();
-char playfield_getchar(uint8_t id);
 void playfield_draw();
 void playfield_drawtile(uint8_t screenx, uint8_t screeny, uint8_t tileid);  // draw tileid 0..5 to specific screen x/y coordinate
 void playfield_swap(char key);

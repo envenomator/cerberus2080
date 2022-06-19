@@ -10,7 +10,7 @@
 
 int main()
 {
-    bool swapstatus;
+    bool swapkeystatus;
     bool gameover = false;
     bool playing = true;
     bool choice;
@@ -24,47 +24,47 @@ int main()
 
     while(playing)
     {
-        swapstatus = false;
+        swapkeystatus = false;
         gameover = false;
         con_cls();              // clear screen
         con_init_timer(120);       // reset timer for this game
         playfield_draw_borders();         
         playfield_init();
         playfield_draw();
-        playfield_cursor_show(swapstatus);
+        playfield_cursor_show(swapkeystatus);
 
-        playfield_display_swap_message(swapstatus);
+        playfield_display_swap_message(swapkeystatus);
         while(!gameover)
         {
             key = con_getc_timer(750);
             switch(key)
             {
                 case KEY_ENTER:   // LF / ENTER
-                    swapstatus = !swapstatus;
-                    playfield_display_swap_message(swapstatus);
-                    playfield_cursor_show(swapstatus);
+                    swapkeystatus = !swapkeystatus;
+                    playfield_display_swap_message(swapkeystatus);
+                    playfield_cursor_show(swapkeystatus);
                     break;
                 case 0x1b:
-                    swapstatus = false;
-                    playfield_display_swap_message(swapstatus);
-                    playfield_cursor_show(swapstatus);
+                    swapkeystatus = false;
+                    playfield_display_swap_message(swapkeystatus);
+                    playfield_cursor_show(swapkeystatus);
                     break;
                 case KEY_UP:
                 case KEY_DOWN:
                 case KEY_LEFT:
                 case KEY_RIGHT:
-                    if(swapstatus)
+                    if(swapkeystatus)
                     {
                         playfield_swap(key);
-                        swapstatus = false;
-                        playfield_display_swap_message(swapstatus);
-                        playfield_cursor_show(swapstatus);
+                        swapkeystatus = false;
+                        playfield_display_swap_message(swapkeystatus);
+                        playfield_cursor_show(swapkeystatus);
                     }
                     else
                     {
                         playfield_cursor_hide();
                         playfield_cursor_move(key);
-                        playfield_cursor_show(swapstatus);
+                        playfield_cursor_show(swapkeystatus);
                     }
                     break;
                 case 'Q':
