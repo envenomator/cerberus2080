@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+DEFAULT_SERIAL_PORT = 'COM11'
+DEFAULT_BAUDRATE    = 230400
+DEFAULT_ADDRESS     = 0x0205
+
 import sys
-import serial
 import time
 import os.path
 
@@ -11,6 +14,27 @@ import os.path
 ## SERIAL PORT defaults to /dev/ttyUSB0
 ## START ADDRESS defaults to 0x0205
 
+def errorexit(message):
+  print(message)
+  print('Press ENTER to continue')
+  input()
+  exit()
+  return
+
+try:
+  import serial
+  import serial.tools.list_ports
+except ModuleNotFoundError:
+  errorexit('Please install the \'pyserial\' module with pip')
+
+if(os.name == 'posix'): # termios only exists on Linux
+  DEFAULT_SERIAL_PORT   = '/dev/ttyUSB0'
+  try:
+    import termios
+  except ModuleNotFoundError:
+    errorexit('Please install the \'termios\' module with pip')
+
+
 if len(sys.argv) == 1:
   sys.exit('Usage: send.py FILENAME <SERIAL_PORT> <START_ADDRESS>')
 
@@ -18,15 +42,17 @@ if not os.path.isfile(sys.argv[1]):
   sys.exit(f'Error: file \'{sys.argv[1]}\' not found')
 
 if len(sys.argv) == 2:
-  serialport = '/dev/ttyUSB0'
-
-if len(sys.argv) == 3:
+  serialports = serial.tools.list_ports.comports()
+  if len(serialports) > 1:
+    sys.exit("Multiple serial ports present - cannot automatically select");
+  serialport = str(serialports[0]).split(" ")[0]
+if len(sys.argv) >= 3:
   serialport = sys.argv[2]
 
 if len(sys.argv) == 4:
   startAddress = sys.argv[3]
 else:
-  startAddress = 0x0205
+  startAddress = DEFAULT_ADDRESS
 
 print(f'Sending {sys.argv[1]}')
 print(f'Using port {serialport}')
@@ -37,10 +63,40 @@ content = f.read()
 checkError = False
 blockSize = 10
 
+resetPort = False
+
+if(os.name == 'posix'):
+  if resetPort == False:
+  # to be able to suppress DTR, we need this
+    f = open(serialport)
+    attrs = termios.tcgetattr(f)
+    attrs[2] = attrs[2] & ~termios.HUPCL
+    termios.tcsetattr(f, termios.TCSAFLUSH, attrs)
+    f.close()
+  else:
+    f = open(serialport)
+    attrs = termios.tcgetattr(f)
+    attrs[2] = attrs[2] | termios.HUPCL
+    termios.tcsetattr(f, termios.TCSAFLUSH, attrs)
+    f.close()
+
+ser = serial.Serial()
+ser.baudrate = DEFAULT_BAUDRATE
+ser.port = serialport
+ser.timeout = 2
+
+# OS-specific serial dtr/rts settings
+if(os.name == 'nt'):
+  ser.setDTR(False)
+  ser.setRTS(False)
+if(os.name == 'posix'):
+  ser.rtscts = False            # not setting to false prevents communication
+  ser.dsrdtr = resetPort        # determines if board resets or not
+
 try:
-  with serial.Serial(serialport, 115200) as ser: ## 9600,8,N,1
+    ser.open()
     print('Opening serial port...')
-    time.sleep(3)
+    #time.sleep(3)
     print('Writing file to serial port')
     blockIndex = 0
     blockBytesRemaining = len(content)
