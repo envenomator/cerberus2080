@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 DEFAULT_SERIAL_PORT = 'COM11'
-DEFAULT_BAUDRATE    = 230400
+DEFAULT_BAUDRATE    = 115200
 DEFAULT_ADDRESS     = 0x0205
 
 import sys
