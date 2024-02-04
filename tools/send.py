@@ -45,6 +45,8 @@ if len(sys.argv) == 2:
   serialports = serial.tools.list_ports.comports()
   if len(serialports) > 1:
     sys.exit("Multiple serial ports present - cannot automatically select");
+  if len(serialports) == 0:
+    sys.exit('No serial port available');
   serialport = str(serialports[0]).split(" ")[0]
 if len(sys.argv) >= 3:
   serialport = sys.argv[2]
@@ -96,7 +98,7 @@ if(os.name == 'posix'):
 try:
     ser.open()
     print('Opening serial port...')
-    #time.sleep(3)
+    #time.sleep(3) #might need this if a Cerberus keeps resetting after opening the serial
     print('Writing file to serial port')
     blockIndex = 0
     blockBytesRemaining = len(content)
@@ -131,7 +133,9 @@ try:
     ser.write(b'\r')
     if checkError:
       print("Upload error - mismatched checksum")
-
+    else:
+      print('\nCerberus command to save data to disk:')
+      print(f'SAVE {(startAddress):04x} {(startAddress + blockIndex - 1):04x} FILENAME')
     f.close()
 except serial.SerialException:
   print('Error: serial port unavailable, quiting.')
